@@ -18,3 +18,5 @@
    
 4. 테이블 모델
    <img width="80%" src="https://github.com/lsum9/HomeSchool-Project/issues/1#issuecomment-1916260644"/>
+
+5. 사이트맵 링크 : https://www.figma.com/file/gtSpE776PEPOp16e1ublWx/homeSchool?type=design&node-id=0%3A1&mode=design&t=a4QCjfrEKf56u1Lq-1
