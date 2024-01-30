@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.home_school.admin.mapper.QuestionScriptMapper">
+    <select id="questionScriptCnt" parameterType="PagingVo" resultType="int">
+        SELECT
+        COUNT(script_no)
+        FROM homeschool.tb_question_script
+        <where>
+            <foreach collection="keywords" index="key" item="word" separator="and">
+                <if test="key== 'gradeNo'">
+                    grade_no = #{word}
+                </if>
+                <if test="key== 'subjectNo'">
+                    subject_no = #{word}
+                </if>
+                <if test="key== 'areaNo'">
+                    area_no = #{word}
+                </if>
+                <if test="key== 'subAreaNo'">
+                    subarea_no = #{word}
+                </if>
+                <if test="key == 'scriptTitle'">
+                    script_title LIKE CONCAT('%', #{word}, '%')
+                </if>
+            </foreach>
+        </where>
+    </select>
+
+    <select id="readQuestionScript" parameterType="PagingVo" resultType="QuestionScriptDto">
+        SELECT
+            script_no
+             , script_title
+             , script_image
+             , grade_no
+             , subarea_no
+             , area_no
+             , subject_no
+        FROM homeschool.tb_question_script
+        <where>
+            <foreach collection="keywords" index="key" item="word" separator="and">
+                <if test="key== 'gradeNo'">
+                    grade_no = #{word}
+                </if>
+                <if test="key== 'subjectNo'">
+                    subject_no = #{word}
+                </if>
+                <if test="key== 'areaNo'">
+                    area_no = #{word}
+                </if>
+                <if test="key== 'subAreaNo'">
+                    subarea_no = #{word}
+                </if>
+                <if test="key == 'scriptTitle'">
+                    script_title LIKE CONCAT('%', #{word}, '%')
+                </if>
+            </foreach>
+        </where>
+        ORDER BY frst_wrt_dt DESC
+    </select>
+
+    <insert id="createQuestionScript" parameterType="questionScriptDto">
+        INSERT INTO
+            homeschool.tb_question_script
+            (
+            script_title
+            , script_image
+            , frst_wrt_id
+            , last_wrt_id
+            , grade_no
+            , subarea_no
+            , area_no
+            , subject_no
+            )
+        VALUES
+            (
+            #{scriptTitle}
+          , #{scriptImage}
+          , 'MASTER'
+          , 'MASTER'
+          , #{gradeNo}
+          , #{subareaNo}
+          , #{areaNo}
+          , #{subjectNo}
+          );
+    </insert>
+
+    <delete id="deleteQuestionScript" parameterType="int">
+        DELETE FROM homeschool.tb_question_script
+        WHERE script_no=#{scriptNo};
+    </delete>
+
+    <update id="updateQuestionScript" parameterType="questionScriptDto">
+        UPDATE
+            homeschool.tb_question_script
+        SET
+            script_title=#{scriptTitle}
+          , script_image=#{scriptImage}
+          , last_wrt_dt=current_timestamp()
+          , last_wrt_id='MASTER'
+        WHERE script_no=#{scriptNo};
+    </update>
+
+</mapper>

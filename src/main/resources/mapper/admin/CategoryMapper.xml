@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.home_school.admin.mapper.CategoryMapper">
+    <select id="categoryCnt" parameterType="PagingVo" resultType="int">
+        <if test = "keywords.isEmpty()">
+            SELECT COUNT(area_no)
+            FROM homeschool.tb_subarea
+        </if>
+        <foreach collection="keywords" index="key">
+            <if test="key== 'subject'">
+                SELECT COUNT(subject_no)
+                FROM homeschool.tb_subject
+            </if>
+            <if test="key== 'area'">
+                SELECT COUNT(area_no)
+                FROM homeschool.tb_area
+            </if>
+            <if test="key== 'subarea'">
+                SELECT COUNT(area_no)
+                FROM homeschool.tb_subarea
+            </if>
+        </foreach>
+    </select>
+
+    <select id="readCategory" parameterType="PagingVo" resultType="CategoryDto">
+        <if test = "keywords.isEmpty()">
+            SELECT
+                s.subject_no
+                ,subject_title
+                ,a.area_no
+                ,area_title
+                ,sa.subarea_no
+                ,subarea_title
+            FROM homeschool.tb_subarea sa
+            join tb_area a
+            on sa.area_no = a.area_no
+            join tb_subject s
+            on a.subject_no = s.subject_no
+            ORDER BY sa.frst_wrt_dt desc
+            LIMIT #{rowPerPage} OFFSET #{startRow};
+        </if>
+        <foreach collection="keywords" index="key" >
+            <if test="key== 'subject'">
+                SELECT
+                    subject_no
+                    , subject_title
+                FROM homeschool.tb_subject
+                ORDER BY frst_wrt_dt DESC
+                LIMIT #{rowPerPage} OFFSET #{startRow};
+            </if>
+            <if test="key== 'area'">
+                SELECT
+                area_no
+                , area_title
+                FROM homeschool.tb_area
+                ORDER BY frst_wrt_dt DESC
+                LIMIT #{rowPerPage} OFFSET #{startRow};
+            </if>
+            <if test="key== 'subarea'">
+                SELECT
+                subarea_no
+                , subarea_title
+                FROM homeschool.tb_subarea
+                ORDER BY frst_wrt_dt DESC
+                LIMIT #{rowPerPage} OFFSET #{startRow};
+            </if>
+        </foreach>
+    </select>
+
+    <insert id="createCategory" parameterType="CategoryDto">
+        <if test="categoryType == 'subject'">
+            INSERT INTO
+                homeschool.tb_subject
+                (
+                 subject_title
+                , frst_wrt_dt
+                , frst_wrt_id
+                , last_wrt_dt
+                , last_wrt_id
+                )
+            VALUES
+                (
+                 #{subjectTitle}
+                , current_timestamp()
+                , 'MASTER'
+                , current_timestamp()
+                , 'MASTER'
+                );
+        </if>
+        <if test="categoryType == 'area'">
+            INSERT INTO
+                homeschool.tb_area
+                (
+                subject_no
+                , area_title
+                , frst_wrt_dt
+                , frst_wrt_id
+                , last_wrt_dt
+                , last_wrt_id
+                )
+                VALUES
+                (
+                #{subjectNo}
+                , #{areaTitle}
+                , current_timestamp()
+                , 'MASTER'
+                , current_timestamp()
+                , 'MASTER'
+                );
+        </if>
+        <if test="categoryType == 'subarea'">
+            INSERT INTO
+                homeschool.tb_subarea
+                (
+                 area_no
+                , subarea_title
+                , frst_wrt_dt
+                , frst_wrt_id
+                , last_wrt_dt
+                , last_wrt_id
+                )
+                VALUES
+                (
+                 #{areaNo}
+                , #{subareaTitle}
+                , current_timestamp()
+                , 'MASTER'
+                , current_timestamp()
+                , 'MASTER'
+                );
+        </if>
+    </insert>
+
+    <delete id="deleteCategory" parameterType="CategoryDto">
+        <if test="categoryType == 'subject'">
+            DELETE
+            FROM homeschool.tb_subject
+            WHERE subject_no=#{subjectNo};
+        </if>
+        <if test="categoryType == 'area'">
+            DELETE
+            FROM homeschool.tb_area
+            WHERE subject_no=#{areaNo};
+        </if>
+        <if test="categoryType == 'subarea'">
+            DELETE
+            FROM homeschool.tb_subarea
+            WHERE subject_no=#{subareaNo};
+        </if>
+
+    </delete>
+
+    <update id="updateCategory" parameterType="CategoryDto">
+        <if test="categoryType == 'subject'">
+            UPDATE homeschool.tb_subject
+            SET
+                subject_title=#{subjectTitle}
+              , last_wrt_dt=current_timestamp()
+              , last_wrt_id='MASTER'
+            WHERE subject_no=#{subjectNo};
+        </if>
+        <if test="categoryType == 'area'">
+            UPDATE homeschool.tb_area
+            SET
+                area_title=#{areaTitle}
+                , last_wrt_dt=current_timestamp()
+                , last_wrt_id='MASTER'
+            WHERE area_no=#{areaNo};
+        </if>
+        <if test="categoryType == 'subarea'">
+            UPDATE homeschool.tb_subarea
+            SET
+                subarea_title=#{subareaTitle}
+                , last_wrt_dt=current_timestamp()
+                , last_wrt_id='MASTER'
+            WHERE subarea_no=#{subareaNo};
+        </if>
+    </update>
+
+</mapper>

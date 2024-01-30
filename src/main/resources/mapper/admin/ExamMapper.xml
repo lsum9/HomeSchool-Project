@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.home_school.admin.mapper.ExamMapper">
+    <select id="examCnt" parameterType="PagingVo" resultType="int">
+        SELECT
+            COUNT(exam_no)
+        FROM homeschool.tb_exam
+        <where>
+            <foreach collection="keywords" index="key" item="word" separator="and">
+                <if test="key== 'examType'">
+                    exam_type = #{word}
+                </if>
+                <if test="key== 'gradeNo'">
+                    grade_no = #{word}
+                </if>
+                <if test="key== 'subjectNo'">
+                    subject_no = #{word}
+                </if>
+                <if test="key== 'areaNo'">
+                    area_no = #{word}
+                </if>
+                <if test="key== 'subAreaNo'">
+                    subarea_no = #{word}
+                </if>
+                <if test="key == 'examTitle'">
+                    question_title LIKE CONCAT('%', #{word}, '%')
+                </if>
+            </foreach>
+        </where>
+    </select>
+
+    <select id="readExamList" parameterType="PagingVo" resultType="ExamDto">
+        SELECT
+            exam_no
+             , grade_no
+             , subject_no
+             , area_no
+             , subarea_no
+             , user_no
+             , exam_type
+             , exam_title
+             , exam_tot_point
+             , exam_time
+             , frst_wrt_dt
+             , frst_wrt_id
+             , exam_qcnt
+        FROM homeschool.tb_exam
+        <where>
+            <foreach collection="keywords" index="key" item="word" separator="and">
+                <if test="key== 'examType'">
+                    exam_type = #{word}
+                </if>
+                <if test="key== 'gradeNo'">
+                    grade_no = #{word}
+                </if>
+                <if test="key== 'subjectNo'">
+                    subject_no = #{word}
+                </if>
+                <if test="key== 'areaNo'">
+                    area_no = #{word}
+                </if>
+                <if test="key== 'subAreaNo'">
+                    subarea_no = #{word}
+                </if>
+                <if test="key == 'examTitle'">
+                    question_title LIKE CONCAT('%', #{word}, '%')
+                </if>
+            </foreach>
+        </where>
+        ORDER BY frst_wrt_dt DESC
+        LIMIT #{rowPerPage} OFFSET #{startRow};
+    </select>
+
+
+    <select id="readExamQuestion" parameterType="Long" resultType="ExamQuestionDto">
+        SELECT
+            exam_question_no
+            , order_no
+            , question_no
+            , question_image
+        FROM tb_exam_question eq
+        JOIN tb_question q
+        ON eq.question_no = q.question_no
+        WHERE exan_no = #{examNo}
+    </select>
+
+    <insert id="createExam" parameterType="ExamDto" useGeneratedKeys="true"
+            keyProperty="examNo" keyColumn="exam_no">
+        INSERT INTO
+            homeschool.tb_exam
+            (
+            grade_no
+            , subject_no
+            , area_no
+            , subarea_no
+            , user_no
+            , exam_type
+            , exam_title
+            , exam_tot_point
+            , exam_time
+            , frst_wrt_id
+            , last_wrt_id
+            , exam_qcnt
+            )
+        VALUES
+            (
+             #{gradeNo}
+            , #{subjectNo}
+            , #{areaNo}
+            , #{subareaNo}
+            , 1
+            , 'm'
+            , #{examTitle}
+            , #{examTotPoint}
+            , #{examTime}
+            , 'MASTER'
+            , 'MASTER'
+            , #{examQcnt}
+             );
+    </insert>
+
+    <insert id="createExamQuestion" parameterType="ExamDto">
+            INSERT INTO
+            homeschool.tb_exam_question
+            (
+            exam_no
+            , order_no
+            , question_no
+            , frst_wrt_id
+            , last_wrt_id
+            )
+            VALUES
+        <foreach collection="examQuestionNo" index="orderNo" item="questionNo" separator=",">
+            (
+            #{examNo}
+            , #{orderNo}
+            , #{questionNo}
+            , 'MASTER'
+            , 'MASTER'
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteExam" parameterType="Long">
+        DELETE
+        FROM homeschool.tb_exam
+        WHERE exam_no=#{examNo};
+    </delete>
+
+    <update id="updateExam" parameterType="ExamDto">
+        UPDATE homeschool.tb_exam
+        SET
+            grade_no=#{gradeNo}
+          , subject_no=#{subjectNo}
+          , area_no=#{areaNo}
+          , subarea_no=#{subareaNo}
+          , exam_title=#{examTitle}
+          , exam_time=#{examTime}
+          , exam_tot_point=#{examTotPoint}
+          , exam_qcnt=#{examQcnt}
+          , last_wrt_dt=current_timestamp()
+          , last_wrt_id='MASTER'
+        WHERE exam_no=#{examNo};
+    </update>
+
+    <update id="updateExamQuestion" parameterType="ExamDto">
+        UPDATE
+            homeschool.tb_exam_question
+        SET
+        <foreach collection="examQuestionNo" item="examQuestionNo">
+            question_no=#{questionNo}
+          , last_wrt_dt=current_timestamp()
+          , last_wrt_id='MASTER'
+        WHERE
+            exam_question_no=#{examQuestionNo};
+        </foreach>
+
+    </update>
+    
+    <select id="readExamQcnt" parameterType="Long">
+        SELECT
+            COUNT(question_no)
+        FROM
+            tb_exam_question
+        WHERE
+            exam_no = #{examNo}
+    </select>
+
+    <select id="readExamTotPoint" parameterType="Long">
+        SELECT
+            SUM(question_point)
+        FROM
+            tb_question q
+            JOIN
+            tb_exam_question eq
+            ON q.question_no = eq.question_no
+        WHERE
+            exam_no = #{examNo}
+    </select>
+
+</mapper>

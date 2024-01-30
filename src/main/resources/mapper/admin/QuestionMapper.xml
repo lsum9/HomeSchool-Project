@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.home_school.admin.mapper.QuestionMapper">
+    <select id="questionCnt" parameterType="PagingVo" resultType="int">
+        SELECT
+        COUNT(question_no)
+        FROM homeschool.tb_question
+        <where>
+            <foreach collection="keywords" index="key" item="word" separator="and">
+                <if test="key== 'questionWriterType'">
+                    question_writer_type = #{word}
+                </if>
+                <if test="key== 'gradeNo'">
+                    grade_no = #{word}
+                </if>
+                <if test="key== 'subjectNo'">
+                    subject_no = #{word}
+                </if>
+                <if test="key== 'areaNo'">
+                    area_no = #{word}
+                </if>
+                <if test="key== 'subAreaNo'">
+                    subarea_no = #{word}
+                </if>
+                <if test="key == 'questionTitle'">
+                    question_title LIKE CONCAT('%', #{word}, '%')
+                </if>
+            </foreach>
+        </where>
+    </select>
+
+    <select id="readQuestion" parameterType="PagingVo" resultType="QuestionDto">
+        SELECT
+            question_no
+             , area_no
+             , subarea_no
+             , subject_no
+             , question_image
+             , question_answer
+             , question_point
+             , question_num
+             , question_title
+        FROM homeschool.tb_question
+        <where>
+            <foreach collection="keywords" index="key" item="word" separator="and">
+                <if test="key== 'questionWriterType'">
+                    question_writer_type = #{word}
+                </if>
+                <if test="key== 'gradeNo'">
+                    grade_no = #{word}
+                </if>
+                <if test="key== 'subjectNo'">
+                    subject_no = #{word}
+                </if>
+                <if test="key== 'areaNo'">
+                    area_no = #{word}
+                </if>
+                <if test="key== 'subAreaNo'">
+                    subarea_no = #{word}
+                </if>
+                <if test="key == 'questionTitle'">
+                    question_title LIKE CONCAT('%', #{word}, '%')
+                </if>
+            </foreach>
+        </where>
+        ORDER BY frst_wrt_dt DESC
+        LIMIT #{rowPerPage} OFFSET #{startRow};
+    </select>
+
+    <insert id="createQuestion" parameterType="questionDto">
+        INSERT INTO
+            homeschool.tb_question
+            (
+             script_no
+            , area_no
+            , subarea_no
+            , subject_no
+            , question_image
+            , question_answer
+            , question_point
+            , frst_wrt_id
+            , last_wrt_id
+            , question_num
+            , question_title
+            , question_writer_type
+            )
+        VALUES
+            (
+             #{scriptNo}
+            , #{areaNo}
+            , #{subareaNo}
+            , #{subjectNo}
+            , #{questionImage}
+            , #{questionAnswer}
+            , #{questionPoint}
+            , 'MASTER'
+            , 'MASTER'
+            , #{questionNum}
+            , #{questionTitle}
+            , 'm'
+            );
+    </insert>
+
+    <delete id="deleteQuestion" parameterType="int">
+        DELETE FROM homeschool.tb_question
+        WHERE question_no=#{questionNo};
+    </delete>
+
+    <update id="updateQuestion" parameterType="questionDto">
+        UPDATE
+            homeschool.tb_question
+        SET
+            script_no=#{scriptNo}
+          , question_image=#{questionImage}
+          , question_answer=#{questionAnswer}
+          , question_point=#{questionPoint}
+          , last_wrt_dt=current_timestamp()
+          , last_wrt_id='MASTER'
+          , question_num=#{questionNum}
+          , question_title=#{questionTitle}
+          , question_writer_type='m'
+        WHERE question_no=#{questionNo};
+    </update>
+
+</mapper>

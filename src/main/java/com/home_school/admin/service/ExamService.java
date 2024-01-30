@@ -1,0 +1,94 @@
+package com.home_school.admin.service;
+
+import com.home_school.admin.dto.ExamDto;
+import com.home_school.admin.dto.ExamQuestionDto;
+import com.home_school.admin.dto.QuestionScriptDto;
+import com.home_school.admin.mapper.ExamMapper;
+import com.home_school.admin.mapper.QuestionMapper;
+import com.home_school.util.paging.Paging;
+import com.home_school.util.paging.PagingVo;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class ExamService {
+
+    private final ExamMapper examMapper;
+    private final QuestionMapper questionMapper;
+    private final Paging paging;
+
+
+    //시험목록 가져오기
+    //@Transactional(readOnly = true)
+    public List<ExamDto> readExam(PagingVo pagingVo){
+        //총 로우수 pagingVo에 추가
+        pagingVo.setTotalRow(examCnt(pagingVo));
+        //가공된 키워드, 현재페이지, 총 로우 수 담긴 pagingVo 페이징 클래스로 넘기기
+        pagingVo=paging.pagingInfo(pagingVo);
+        //System.out.println("서비스 페이징"+pagingVo);
+        return examMapper.readExamList(pagingVo);
+    }
+
+    //시험 상세 가져오기
+    /*public Map<String, Object> examDetail(Long examNo){
+        ExamDto examDto = examMapper.readExamDetail(examNo);
+        ExamQuestionDto examQuestionDto = examMapper.readExamQuestion(examNo);
+        QuestionScriptDto questionScriptDto =
+    }*/
+
+    public int examCnt(PagingVo pagingVo){
+        return examMapper.examCnt(pagingVo);
+    }
+
+    //시험 insert
+    //@Transactional
+    public int createExam(ExamDto examDto){
+        //int createExamResult = examMapper.createExam(examDto);
+
+        int createUpdateExamResult = 0;
+
+        //exam이 성공적으로 insert되면
+        if(examMapper.createExam(examDto) ==1){
+            //시험-문제 테이블 인서트 완료되면
+            if(examMapper.createExamQuestion(examDto) == examDto.getExamQuestionNo().size()){
+                Long examNo = examDto.getExamNo();
+                //시험-문제 테이블 경유하여 문항수, 총점 examNo에 등록
+                examDto.setExamQcnt(examMapper.readExamQcnt(examNo));
+                examDto.setExamTotPoint(examMapper.readExamTotPoint(examNo));
+                //위에서 받아온 문항수, 총점을 tb_exam에 update
+                createUpdateExamResult = examMapper.updateExam(examDto);
+                System.out.println("시험작성 서비스 확인: "+examDto);
+                System.out.println(createUpdateExamResult);
+            }else{
+                //시험-문제 테이블 인서트 제대로 처리되지 않았을 때
+                examMapper.deleteExam(examDto.getExamNo());
+            }
+        }
+        return createUpdateExamResult;
+    }
+
+    //@Transactional
+    public int deleteExam(Long examNo){
+        return examMapper.deleteExam(examNo);
+    }
+    //@Transactional
+    public int updateExam(ExamDto examDto){
+        int createUpdateExamResult = 0;
+        //시험-문제 업데이트
+        if(examMapper.updateExamQuestion(examDto) == examDto.getExamQuestionNo().size()){
+            //업데이트된 시험-문제 에 따라 변화된 총점과 문항수 dto에 넣기
+            examDto.setExamQcnt(examMapper.readExamQcnt(examDto.getExamNo()));
+            examDto.setExamTotPoint(examMapper.readExamTotPoint(examDto.getExamNo()));
+            createUpdateExamResult = examMapper.updateExam(examDto);
+        }
+        return createUpdateExamResult;
+    }
+}
