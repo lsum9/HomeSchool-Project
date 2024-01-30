@@ -17,7 +17,7 @@
 3. 개발환경 : jdk17, MariaDB, tomcat 10, SpringBoot 3.2.2, Gradle, jsp, thymeleaf
    
 4. 테이블 모델
-   <img width="80%" src="https://github.com/lsum9/HomeSchool-Project/issues/1#issuecomment-1916260644"/>
+   <img width="80%" src="{https://github.com/lsum9/HomeSchool-Project/issues/1#issuecomment-1916260644}"/>
 
 5. 사이트맵 링크 :
  <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FgtSpE776PEPOp16e1ublWx%2FhomeSchool%3Ftype%3Ddesign%26node-id%3D0%253A1%26mode%3Ddesign%26t%3Da4QCjfrEKf56u1Lq-1" allowfullscreen></iframe>
