@@ -20,4 +20,4 @@
 3. 개발환경 : jdk17, MariaDB, tomcat 10, SpringBoot 3.2.2, Gradle, jsp, thymeleaf
    
 4. 테이블 모델
-   <img width="80%" src=""/>
+   <img width="80%" src="https://github.com/lsum9/HomeSchool-Project/issues/1#issuecomment-1916260644"/>
