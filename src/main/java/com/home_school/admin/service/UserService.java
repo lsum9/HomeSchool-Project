@@ -6,6 +6,7 @@ import com.home_school.util.paging.Paging;
 import com.home_school.util.paging.PagingVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
 import java.util.List;
@@ -19,6 +20,7 @@ public class UserService {
     private final Paging paging;
 
     //유저목록 가져오기
+    @Transactional(readOnly = true)
     public List<UserDto> readUser(PagingVo pagingVo){
         //총 로우수 pagingVo에 추가
         pagingVo.setTotalRow(userCnt(pagingVo));
@@ -28,14 +30,17 @@ public class UserService {
         return userMapper.readUser(pagingVo);
     }
 
+    @Transactional(readOnly = true)
     public int userCnt(PagingVo pagingVo){
         return userMapper.userCnt(pagingVo);
     }
 
+    @Transactional
     public int deleteUser(int userNo){
         return userMapper.deleteUser(userNo);
     }
 
+    @Transactional
     public int updateUser(UserDto userDto){
         return userMapper.updateUser(userDto);
     }

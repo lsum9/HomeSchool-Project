@@ -99,48 +99,28 @@ public class ExamService {
     //시험 업데이트
     @Transactional
     public int updateExam(ExamDto examDto){
-        //examDto에 map으로 담겨있는 문항순서:문항번호
-        int createUpdateExamResult = 0;
 
-       /* //기존 시험-문항 정보 저장
+        //구 시험-문제 데이터 저장
         Map<Integer,Long> oldExamQuestionNo = new HashMap<>(); //기존 시험-문항 정보 저장할 map
-        //기존 시험-문항 정보
+        Map<Integer,Long> newExamQuestionNo = examDto.getExamQuestionNo(); //새 시험-문항 정보 map
         List<ExamQuestionDto> examQuestionDtoList = examMapper.readExamQuestionDetail(examDto.getExamNo());
-        for(ExamQuestionDto examQuestionDto:examQuestionDtoList){
-            oldExamQuestionNo.put(examQuestionDto.getOrderNo(),examQuestionDto.getQuestionNo());
-        }*/
+        for(ExamQuestionDto examQuestionDto:examQuestionDtoList) {
+            oldExamQuestionNo.put(examQuestionDto.getOrderNo(), examQuestionDto.getQuestionNo());
+        }
 
+        //변경된 문항정보가 들어올 경우
         //기존 시험-문항 데이터 삭제하고 새로 생성
-        examMapper.deleteExamQuestion(examDto.getExamNo());
-        examMapper.createExamQuestion(examDto);
+        if(newExamQuestionNo != oldExamQuestionNo && !newExamQuestionNo.isEmpty()) {
+            examMapper.deleteExamQuestion(examDto.getExamNo());
+            examMapper.createExamQuestion(examDto);
+        }else{
+            examDto.setExamQuestionNo(oldExamQuestionNo);
+        }
         //시험-문제 테이블 통해 새로 생성된 문항수, 총점 examDto에 넣기
         examDto.setExamQcnt(examMapper.readExamQuestionCnt(examDto.getExamNo()));
         examDto.setExamTotPoint(examMapper.readExamTotPoint(examDto.getExamNo()));
         //examDto넘겨 문항수, 총점 갱신
-        createUpdateExamResult = examMapper.updateExam(examDto);
+        return examMapper.updateExam(examDto);
 
-        //지워진 시험-문항 로우수가 지우기 전 시험-문항 로우수와 같으면
-        /*if(deleteExamQuestion == readExamQuestionCnt){
-            //새로운 시험-문항 생성
-            createExamQuestion = examMapper.createExamQuestion(examDto);
-            //새롭게 생성된 시험-문항 개수가 입력받은 문항수와 같으면
-            if(createExamQuestion == examDto.getExamQuestionNo().size()){
-                //시험-문제 테이블 통해 문항수, 총점 examDto에 넣기
-                examDto.setExamQcnt(examMapper.readExamQuestionCnt(examDto.getExamNo()));
-                examDto.setExamTotPoint(examMapper.readExamTotPoint(examDto.getExamNo()));
-                createUpdateExamResult = examMapper.updateExam(examDto);
-            }
-        }*/
-
-        //시험-문제 업데이트
-       /* if(examMapper.updateExamQuestion(examDto) == examDto.getExamQuestionNo().size()){
-            //업데이트된 시험-문제 에 따라 변화된 총점과 문항수 dto에 넣기
-            examDto.setExamQcnt(examMapper.readExamQuestionCnt(examDto.getExamNo()));
-            examDto.setExamTotPoint(examMapper.readExamTotPoint(examDto.getExamNo()));
-
-            //변화된 문항수, 총점 포함하여 시험 일반정보 업데이트
-            createUpdateExamResult = examMapper.updateExam(examDto);
-        }*/
-        return createUpdateExamResult;
     }
 }

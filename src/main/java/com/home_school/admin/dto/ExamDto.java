@@ -1,12 +1,14 @@
 package com.home_school.admin.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.List;
 import java.util.Map;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class ExamDto {
     private Long examNo;
     private int gradeNo;
@@ -18,7 +20,6 @@ public class ExamDto {
     private String examTitle;
     private int examTotPoint;
     private String examTime;
-    private String frstWrtDt;
     private String frstWrtId;
     private int examQcnt;
     private int totalRow;

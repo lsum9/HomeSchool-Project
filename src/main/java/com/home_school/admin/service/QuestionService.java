@@ -8,6 +8,7 @@ import com.home_school.util.paging.Paging;
 import com.home_school.util.paging.PagingVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class QuestionService {
     private final QuestionScriptMapper questionScriptMapper;
     private final Paging paging;
 
+    @Transactional(readOnly = true)
     public List<QuestionDto> readQuestion(PagingVo pagingVo){
         //총 로우수 pagingVo에 추가
         pagingVo.setTotalRow(questionCnt(pagingVo));
@@ -28,22 +30,29 @@ public class QuestionService {
     }
 
     //총 글개수
+    @Transactional(readOnly = true)
     public int questionCnt(PagingVo pagingVo){
         return questionMapper.questionCnt(pagingVo);
     }
+
+    @Transactional
     public int createQuestion(QuestionDto questionDto){
         //지문이 있을 경우 가져오기
         return questionMapper.createQuestion(questionDto);
     }
+    @Transactional
     public int deleteQuestion(int questionNo){
         return questionMapper.deleteQuestion(questionNo);
     }
 
+    @Transactional
     public int updateQuestion(QuestionDto questionDto){
         return questionMapper.updateQuestion(questionDto);
     }
 
-    //quesitonScript
+
+    /////////////////quesitonScript
+    @Transactional(readOnly = true)
     public List<QuestionScriptDto> readQuestionScript(PagingVo pagingVo){
         //총 로우수 pagingVo에 추가
         pagingVo.setTotalRow(questionScriptCnt(pagingVo));
@@ -54,19 +63,21 @@ public class QuestionService {
     }
 
     //총 글개수
+    @Transactional(readOnly = true)
     public int questionScriptCnt(PagingVo pagingVo){
         return questionScriptMapper.questionScriptCnt(pagingVo);
     }
+    @Transactional
     public int createQuestionScript(QuestionScriptDto questionScriptDto){
         return questionScriptMapper.createQuestionScript(questionScriptDto);
     }
+    @Transactional
     public int deleteQuestionScript(int scriptNo){
         return questionScriptMapper.deleteQuestionScript(scriptNo);
     }
 
+    @Transactional
     public int updateQuestionScript(QuestionScriptDto questionScriptDto){
         return questionScriptMapper.updateQuestionScript(questionScriptDto);
     }
-
-
 }
