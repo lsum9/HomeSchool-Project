@@ -22,5 +22,7 @@ public class ExamDto {
     private String frstWrtId;
     private int examQcnt;
     private int totalRow;
+    
+    //작업후 삭제요망
     private Map<Integer,Long> examQuestionNo;
 }

@@ -74,6 +74,54 @@
         LIMIT #{rowPerPage} OFFSET #{startRow};
     </select>
 
+    <select id="readExamDetail" parameterType="Long" resultType="ExamDto">
+        SELECT
+            exam_no
+             , grade_no
+             , subject_no
+             , area_no
+             , subarea_no
+             , user_no
+             , exam_type
+             , exam_title
+             , exam_tot_point
+             , exam_time
+             , frst_wrt_dt
+             , frst_wrt_id
+             , exam_qcnt
+        FROM homeschool.tb_exam
+        WHERE exam_no = #{examNo}
+    </select>
+
+    <select id="readExamQuestionDetail" parameterType="Long" resultType="ExamQuestionDto2">
+        SELECT
+            order_no
+            ,tq.question_no
+            , question_title
+            , question_image
+            , question_answer
+            , question_answer_image
+            , question_point
+            , question_num
+            , question_writer_type
+            , tqs.script_no
+            , script_title
+            , script_image
+            , tq.subject_no
+            , tq.grade_no
+            , tq.area_no
+            , tq.subarea_no
+        FROM
+            tb_question tq
+            JOIN
+            tb_exam_question teq
+            ON tq.question_no =teq.question_no
+            LEFT JOIN
+            tb_question_script tqs
+            ON tq.script_no =tqs.script_no
+        WHERE exam_no =#{examNo}
+        ORDER BY order_no;
+    </select>
 
     <select id="readExamQuestion" parameterType="Long" resultType="ExamQuestionDto">
         SELECT

@@ -15,29 +15,35 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 public class ExamController {
-    private final ExamService examservice;
+    private final ExamService examService;
 
     @GetMapping(value = "/admin/exams")
-    public ResponseEntity<List<ExamDto>> exam(@RequestParam Map<String, String> keywords){
+    public ResponseEntity<List<ExamDto>> readExamList(@RequestParam Map<String, String> keywords){
         PagingVo pagingVo = new PagingVo();
         pagingVo.setKeywords(keywords);
-        return ResponseEntity.ok(examservice.readExam(pagingVo));
+        return ResponseEntity.ok(examService.readExamList(pagingVo));
     }
+
+    @GetMapping(value = "/admin/exams/{examNo}")
+    public ResponseEntity<Map<String,Object>> readExamDetail(@PathVariable Long examNo){
+        return ResponseEntity.ok((examService.readExamDetail(examNo)));
+    }
+
 
     @PostMapping(value = "/admin/exams")
     public ResponseEntity<Integer> create(@RequestBody ExamDto examDto){
-        return ResponseEntity.ok(examservice.createExam(examDto));
+        return ResponseEntity.ok(examService.createExam(examDto));
     }
 
     @DeleteMapping(value = "/admin/exams/{examNo}")
     public ResponseEntity<Integer> delete(@PathVariable Long examNo){
-        return ResponseEntity.ok(examservice.deleteExam(examNo));
+        return ResponseEntity.ok(examService.deleteExam(examNo));
     }
 
     @PatchMapping(value = "/admin/exams/{examNo}")
     public ResponseEntity<Integer> update(@PathVariable int examNo
                                         ,@RequestBody ExamDto examDto){
-        return ResponseEntity.ok(examservice.updateExam(examDto));
+        return ResponseEntity.ok(examService.updateExam(examDto));
     }
 
 

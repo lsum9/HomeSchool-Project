@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class QuestionDto {
+    //문항 기본정보
     private int questionNo;
     private int scriptNo;
     private int areaNo;
@@ -12,11 +13,10 @@ public class QuestionDto {
     private String questionImage;
     private int questionAnswer;
     private int questionPoint;
-    private String frstWrtDt;
-    private String frstWrtId;
-    private String lastWrtDt;
-    private String lastWrtId;
     private int questionNum;
     private String questionTitle;
     private String questionWriterType;
+
+    private int orderNo;
+
 }

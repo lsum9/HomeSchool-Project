@@ -1,8 +1,6 @@
 package com.home_school.admin.service;
 
-import com.home_school.admin.dto.ExamDto;
-import com.home_school.admin.dto.ExamQuestionDto;
-import com.home_school.admin.dto.QuestionScriptDto;
+import com.home_school.admin.dto.*;
 import com.home_school.admin.mapper.ExamMapper;
 import com.home_school.admin.mapper.QuestionMapper;
 import com.home_school.util.paging.Paging;
@@ -11,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -28,7 +23,7 @@ public class ExamService {
 
     //시험목록 가져오기
     //@Transactional(readOnly = true)
-    public List<ExamDto> readExam(PagingVo pagingVo){
+    public List<ExamDto> readExamList(PagingVo pagingVo){
         //총 로우수 pagingVo에 추가
         pagingVo.setTotalRow(examCnt(pagingVo));
         //가공된 키워드, 현재페이지, 총 로우 수 담긴 pagingVo 페이징 클래스로 넘기기
@@ -38,11 +33,19 @@ public class ExamService {
     }
 
     //시험 상세 가져오기
-    /*public Map<String, Object> examDetail(Long examNo){
+    public Map<String, Object> readExamDetail(Long examNo){
+        Map<String,Object> map = new HashMap<>();
+        //시험 일반정보 가져오기
         ExamDto examDto = examMapper.readExamDetail(examNo);
-        ExamQuestionDto examQuestionDto = examMapper.readExamQuestion(examNo);
-        QuestionScriptDto questionScriptDto =
-    }*/
+
+        //시험-문제 관계 조인 테이블에서 문제, 문제순서, 해설 가져오기
+        List<ExamQuestionDto2> examQuestionDto2 = examMapper.readExamQuestionDetail(examNo);
+
+        map.put("exam", examDto);
+        map.put("examQuestion",examQuestionDto2);
+
+        return map;
+    }
 
     public int examCnt(PagingVo pagingVo){
         return examMapper.examCnt(pagingVo);

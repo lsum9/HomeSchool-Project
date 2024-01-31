@@ -7,10 +7,6 @@ public class QuestionScriptDto {
     private int scriptNo;
     private String scriptTitle;
     private String scriptImage;
-    private String frstWrtDt;
-    private String frstWrtId;
-    private String lastWrtDt;
-    private String lastWrtId;
     private int gradeNo;
     private int subareaNo;
     private int areaNo;

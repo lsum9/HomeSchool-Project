@@ -10,6 +10,7 @@ import java.util.List;
 public interface QuestionMapper {
     List<QuestionDto> readQuestion(PagingVo pagingVo);
 
+    QuestionDto readQuestionDetail(Long questionNo);
     int questionCnt(PagingVo pagingVo);
     int createQuestion(QuestionDto questionDto);
     int deleteQuestion(int questionNo);
