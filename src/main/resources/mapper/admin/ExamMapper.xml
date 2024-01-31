@@ -93,7 +93,7 @@
         WHERE exam_no = #{examNo}
     </select>
 
-    <select id="readExamQuestionDetail" parameterType="Long" resultType="ExamQuestionDto2">
+    <select id="readExamQuestionDetail" parameterType="Long" resultType="ExamQuestionDto">
         SELECT
             order_no
             ,tq.question_no

@@ -21,6 +21,11 @@ public class ExamService {
     private final Paging paging;
 
 
+    //시험개수
+    public int examCnt(PagingVo pagingVo){
+        return examMapper.examCnt(pagingVo);
+    }
+
     //시험목록 가져오기
     //@Transactional(readOnly = true)
     public List<ExamDto> readExamList(PagingVo pagingVo){
@@ -47,11 +52,8 @@ public class ExamService {
         return map;
     }
 
-    public int examCnt(PagingVo pagingVo){
-        return examMapper.examCnt(pagingVo);
-    }
-
     //시험 insert
+    //클라이언트에서 넘어온 시험일반정보+Map<문항순서, 문항번호>활용
     //@Transactional
     public int createExam(ExamDto examDto){
         int createUpdateExamResult = 0;

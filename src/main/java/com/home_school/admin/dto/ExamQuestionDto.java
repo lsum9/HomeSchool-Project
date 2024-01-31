@@ -5,10 +5,6 @@ import lombok.Data;
 
 @Data
 public class ExamQuestionDto {
-    //private Long examNo;
-
-    //private Long examQuestionNo;
-
     private int orderNo;
     private Long questionNo;
     private String questionTitle;
