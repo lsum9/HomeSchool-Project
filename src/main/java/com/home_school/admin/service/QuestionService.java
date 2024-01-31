@@ -43,8 +43,6 @@ public class QuestionService {
         return questionMapper.updateQuestion(questionDto);
     }
 
-
-
     //quesitonScript
     public List<QuestionScriptDto> readQuestionScript(PagingVo pagingVo){
         //총 로우수 pagingVo에 추가

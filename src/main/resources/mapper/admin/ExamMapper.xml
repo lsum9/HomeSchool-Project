@@ -123,18 +123,6 @@
         ORDER BY order_no;
     </select>
 
-    <select id="readExamQuestion" parameterType="Long" resultType="ExamQuestionDto">
-        SELECT
-            exam_question_no
-            , order_no
-            , question_no
-            , question_image
-        FROM tb_exam_question eq
-        JOIN tb_question q
-        ON eq.question_no = q.question_no
-        WHERE exan_no = #{examNo}
-    </select>
-
     <insert id="createExam" parameterType="ExamDto" useGeneratedKeys="true"
             keyProperty="examNo" keyColumn="exam_no">
         INSERT INTO

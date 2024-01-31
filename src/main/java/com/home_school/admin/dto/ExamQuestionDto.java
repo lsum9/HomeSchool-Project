@@ -3,17 +3,28 @@ package com.home_school.admin.dto;
 
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class ExamQuestionDto {
-    private Long examQuestionNo;
-    private Long examNo;
-    private Long questionNo;
-    private String questionImage;
+    //private Long examNo;
+
+    //private Long examQuestionNo;
+
     private int orderNo;
-    private String frstWrtDt;
-    private String frstWrtId;
-    private String lastWrtDt;
-    private String lastWrtId;
+    private Long questionNo;
+    private String questionTitle;
+    private String questionImage;
+    private int questionAnswer;
+    private String questionAnswerImage;
+    private int questionPoint;
+    private int questionNum;
+    private String questionWriterType;
+
+    private Long scriptNo;
+    private String scriptTitle;
+    private String scriptImage;
+
+    private int subjectNo;
+    private int gradeNo;
+    private int areaNo;
+    private int subareaNo;
 }

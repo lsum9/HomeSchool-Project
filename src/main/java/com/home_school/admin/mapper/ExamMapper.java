@@ -2,7 +2,6 @@ package com.home_school.admin.mapper;
 
 import com.home_school.admin.dto.ExamDto;
 import com.home_school.admin.dto.ExamQuestionDto;
-import com.home_school.admin.dto.ExamQuestionDto2;
 import com.home_school.util.paging.PagingVo;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -15,7 +14,7 @@ public interface ExamMapper {
 
     //시험상세를 위한 구성요소들
     ExamDto readExamDetail(Long examNo);
-    List<ExamQuestionDto2> readExamQuestionDetail(Long examNo);
+    List<ExamQuestionDto> readExamQuestionDetail(Long examNo);
 
 
 

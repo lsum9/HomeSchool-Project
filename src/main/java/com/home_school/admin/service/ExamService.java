@@ -39,10 +39,10 @@ public class ExamService {
         ExamDto examDto = examMapper.readExamDetail(examNo);
 
         //시험-문제 관계 조인 테이블에서 문제, 문제순서, 해설 가져오기
-        List<ExamQuestionDto2> examQuestionDto2 = examMapper.readExamQuestionDetail(examNo);
+        List<ExamQuestionDto> examQuestionDto = examMapper.readExamQuestionDetail(examNo);
 
         map.put("exam", examDto);
-        map.put("examQuestion",examQuestionDto2);
+        map.put("examQuestion", examQuestionDto);
 
         return map;
     }
@@ -54,8 +54,6 @@ public class ExamService {
     //시험 insert
     //@Transactional
     public int createExam(ExamDto examDto){
-        //int createExamResult = examMapper.createExam(examDto);
-
         int createUpdateExamResult = 0;
 
         //exam이 성공적으로 insert되면
