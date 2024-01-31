@@ -17,7 +17,6 @@ public interface ExamMapper {
     List<ExamQuestionDto> readExamQuestionDetail(Long examNo);
 
 
-
     int createExam(ExamDto examDto);
 
     int createExamQuestion(ExamDto examDto);
@@ -27,7 +26,9 @@ public interface ExamMapper {
     //시험-문항 테이블 update
     int updateExamQuestion(ExamDto examDto);
 
-    int readExamQcnt(Long examNo);
+    int deleteExamQuestion(Long examNo);
+
+    int readExamQuestionCnt(Long examNo);
 
     int readExamTotPoint(Long examNo);
 

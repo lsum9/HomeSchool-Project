@@ -208,6 +208,7 @@
         SET
         <foreach collection="examQuestionNo" item="examQuestionNo">
             question_no=#{questionNo}
+          , order_no = #{orderNo}
           , last_wrt_dt=current_timestamp()
           , last_wrt_id='MASTER'
         WHERE
@@ -215,8 +216,14 @@
         </foreach>
 
     </update>
+
+    <delete id="deleteExamQuestion" parameterType="Long">
+        DELETE
+        FROM homeschool.tb_exam_question
+        WHERE exam_no=#{examNo};
+    </delete>
     
-    <select id="readExamQcnt" parameterType="Long">
+    <select id="readExamQuestionCnt" parameterType="Long">
         SELECT
             COUNT(question_no)
         FROM

@@ -40,9 +40,8 @@ public class ExamController {
         return ResponseEntity.ok(examService.deleteExam(examNo));
     }
 
-    @PatchMapping(value = "/admin/exams/{examNo}")
-    public ResponseEntity<Integer> update(@PathVariable int examNo
-                                        ,@RequestBody ExamDto examDto){
+    @PatchMapping(value = "/admin/exams")
+    public ResponseEntity<Integer> update(@RequestBody ExamDto examDto){
         return ResponseEntity.ok(examService.updateExam(examDto));
     }
 

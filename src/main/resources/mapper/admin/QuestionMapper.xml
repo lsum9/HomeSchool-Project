@@ -117,9 +117,11 @@
         UPDATE
             homeschool.tb_question
         SET
-            script_no=#{scriptNo}
+            grade_no=#{gradeNo}
+          , script_no=#{scriptNo}
           , question_image=#{questionImage}
           , question_answer=#{questionAnswer}
+          , question_answer_image= #{questionAnswerImage}
           , question_point=#{questionPoint}
           , last_wrt_dt=current_timestamp()
           , last_wrt_id='MASTER'
