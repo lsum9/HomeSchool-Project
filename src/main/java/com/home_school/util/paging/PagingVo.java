@@ -23,30 +23,4 @@ public class PagingVo {
     private int startPageNum;
     private int endPageNum;
     private Map<String, String> keywords;
-
-    // setKeywords 메서드 수정
-    public void setKeywords(Map<String, String> keywords) {
-        this.keywords = keywords;
-        keywords();  // processKeywords 메서드 호출
-    }
-
-    //키워드가공로직
-    private void keywords(){
-        Iterator<String> iterator = keywords.keySet().iterator();
-        while (iterator.hasNext()) {
-            String key = iterator.next();
-            String word = keywords.get(key).trim();
-            if (word.isEmpty()) {
-                //키는 있으나 값이 없을경우 key제거
-                iterator.remove();
-            }//값없는 키제거 - if end
-        }
-        if(keywords.containsKey("nowPage")){
-            nowPage = Integer.parseInt(keywords.get("nowPage"));
-        }else {
-            nowPage=1;
-        }
-
-
-    }//keywords() end
 }

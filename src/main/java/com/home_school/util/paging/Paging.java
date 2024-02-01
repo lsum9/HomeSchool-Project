@@ -16,13 +16,28 @@ public class Paging {
     private final Environment environment;
 
     public PagingVo pagingInfo(PagingVo pagingVo){
+        System.out.println("처리전 키워드확인: "+pagingVo);
+        Map<String, String> keywords = pagingVo.getKeywords();
         int pageNumCnt = Integer.parseInt(environment.getProperty("paging.pageNumCnt"));
         int rowPerPage = Integer.parseInt(environment.getProperty("paging.rowPerPage"));
-        //int nowPage = Integer.parseInt(pagingVo.getKeywords().get("nowPage"));
-        int nowPage = pagingVo.getNowPage();
         int totalRow = pagingVo.getTotalRow();
+        int nowPage = pagingVo.getNowPage();
         int startPageNum = 0;
         int endPageNum = 0;
+
+        //nowPage값이 없다면
+        if(nowPage == 0){
+            //키워드에서 현재페이지 추출
+            if (keywords.containsKey("nowPage") && !keywords.get("nowPage").isEmpty()) {
+                nowPage = Integer.parseInt(keywords.get("nowPage"));
+                keywords.remove("nowPage");
+            } else {
+                nowPage = 1;
+            }
+        }//if end
+
+        //키워드가공
+        keywords = keywords(keywords);
 
         //최초 nowPage=1
         int startRow = (nowPage-1) * rowPerPage;
@@ -57,6 +72,8 @@ public class Paging {
             }//if end
         }//if end
 
+        pagingVo.setKeywords(keywords);
+        pagingVo.setNowPage(nowPage);
         pagingVo.setPageNumCnt(pageNumCnt);
         pagingVo.setRowPerPage(rowPerPage);
         pagingVo.setStartRow(startRow);
@@ -64,6 +81,21 @@ public class Paging {
         pagingVo.setEndPageNum(endPageNum);
         pagingVo.setTotalPage(totalPage);
 
+        System.out.println("pagingInfo확인: "+ pagingVo);
         return pagingVo;
     }
+
+    //키워드가공로직
+    private Map<String, String> keywords(Map<String, String> keywords) {
+        Iterator<String> iterator = keywords.keySet().iterator();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            String word = keywords.get(key).trim();
+            if (word.isEmpty()) {
+                //키는 있으나 값이 없을경우 key제거
+                iterator.remove();
+            }//값없는 키제거 - if end
+        }//while end
+        return keywords;
+    }//keywords() end
 }

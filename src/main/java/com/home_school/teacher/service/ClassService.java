@@ -1,4 +1,4 @@
-package com.home_school.admin.service;
+package com.home_school.teacher.service;
 
 import com.home_school.admin.dto.CategoryDto;
 import com.home_school.admin.mapper.CategoryMapper;
@@ -13,13 +13,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryService {
+public class ClassService {
     private final CategoryMapper categoryMapper;
     private final Paging paging;
     private final Category category;
 
     @Transactional(readOnly = true)
-    public List<CategoryDto> readCategoryList(PagingVo pagingVo){
+    public List<CategoryDto> readCategory(PagingVo pagingVo){
         //총 로우수 pagingVo에 추가
         pagingVo.setTotalRow(categoryCnt(pagingVo));
         //가공된 키워드, 현재페이지, 총 로우 수 담긴 pagingVo 페이징 클래스로 넘기기

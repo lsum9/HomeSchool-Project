@@ -22,7 +22,7 @@
                 <if test="key== 'areaNo'">
                     area_no = #{word}
                 </if>
-                <if test="key== 'subAreaNo'">
+                <if test="key== 'subareaNo'">
                     subarea_no = #{word}
                 </if>
                 <if test="key == 'examTitle'">
@@ -62,7 +62,7 @@
                 <if test="key== 'areaNo'">
                     area_no = #{word}
                 </if>
-                <if test="key== 'subAreaNo'">
+                <if test="key== 'subareaNo'">
                     subarea_no = #{word}
                 </if>
                 <if test="key == 'examTitle'">

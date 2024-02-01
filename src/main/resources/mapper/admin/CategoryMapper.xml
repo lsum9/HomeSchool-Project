@@ -53,18 +53,30 @@
             </if>
             <if test="key== 'area'">
                 SELECT
-                area_no
+                s.subject_no
+                , subject_title
+                , area_no
                 , area_title
-                FROM homeschool.tb_area
-                ORDER BY frst_wrt_dt DESC
+                FROM homeschool.tb_area a
+                JOIN homeschool.tb_subject s
+                ON a.subject_no = s.subject_no
+                ORDER BY a.frst_wrt_dt DESC
                 LIMIT #{rowPerPage} OFFSET #{startRow};
             </if>
             <if test="key== 'subarea'">
                 SELECT
-                subarea_no
+                s.subject_no
+                , subject_title
+                , a.area_no
+                , area_title
+                , subarea_no
                 , subarea_title
-                FROM homeschool.tb_subarea
-                ORDER BY frst_wrt_dt DESC
+                FROM homeschool.tb_subarea sa
+                JOIN homeschool.tb_area a
+                ON sa.area_no = a.area_no
+                JOIN homeschool.tb_subject s
+                ON a.subject_no = s.subject_no
+                ORDER BY sa.frst_wrt_dt DESC
                 LIMIT #{rowPerPage} OFFSET #{startRow};
             </if>
         </foreach>
