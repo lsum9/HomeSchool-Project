@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 @Mapper
 public interface UserMapper {
-    List<UserDto> readUser(PagingVo pagingVo);
+    List<UserDto> readUserList(PagingVo pagingVo);
 
     int userCnt(PagingVo pagingVo);
     int deleteUser(int userNo);

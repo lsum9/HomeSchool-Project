@@ -8,7 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface QuestionMapper {
-    List<QuestionDto> readQuestion(PagingVo pagingVo);
+    List<QuestionDto> readQuestionList(PagingVo pagingVo);
 
     QuestionDto readQuestionDetail(Long questionNo);
     int questionCnt(PagingVo pagingVo);

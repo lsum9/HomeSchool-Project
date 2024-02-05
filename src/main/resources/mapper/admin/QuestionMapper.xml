@@ -32,7 +32,7 @@
         </where>
     </select>
 
-    <select id="readQuestion" parameterType="PagingVo" resultType="QuestionDto">
+    <select id="readQuestionList" parameterType="PagingVo" resultType="QuestionDto">
         SELECT
             question_no
              , area_no

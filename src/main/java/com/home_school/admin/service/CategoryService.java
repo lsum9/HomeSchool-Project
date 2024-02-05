@@ -24,8 +24,7 @@ public class CategoryService {
         pagingVo.setTotalRow(categoryCnt(pagingVo));
         //가공된 키워드, 현재페이지, 총 로우 수 담긴 pagingVo 페이징 클래스로 넘기기
         pagingVo=paging.pagingInfo(pagingVo);
-        System.out.println("서비스 페이징"+pagingVo);
-        return categoryMapper.readCategory(pagingVo);
+        return categoryMapper.readCategoryList(pagingVo);
     }
 
     //총 글개수

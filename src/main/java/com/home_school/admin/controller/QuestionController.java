@@ -21,7 +21,7 @@ public class QuestionController {
     public ResponseEntity<List<QuestionDto>> readQuestionList(@RequestParam Map<String, String> keywords){
         PagingVo pagingVo = new PagingVo();
         pagingVo.setKeywords(keywords);
-        return ResponseEntity.ok(questionService.readQuestion(pagingVo));
+        return ResponseEntity.ok(questionService.readQuestionList(pagingVo));
     }
 
 

@@ -16,28 +16,27 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CategoryController {
     private final CategoryService categoryService;
-    private final Paging paging;
 
     //카테고리 조회 - subject, area, subarea 중 선택된 키의 value=1로 들어옴
     @GetMapping(value="/admin/categories")
-    public ResponseEntity<List<CategoryDto>> read(@RequestParam Map<String, String> keywords){
+    public ResponseEntity<List<CategoryDto>> readCategoryList(@RequestParam Map<String, String> keywords){
         PagingVo pagingVo = new PagingVo();
         pagingVo.setKeywords(keywords);
         return ResponseEntity.ok(categoryService.readCategoryList(pagingVo));
     }
 
     @PostMapping(value = "/admin/categories")
-    public ResponseEntity<Integer> create(@RequestBody CategoryDto categoryDto){
+    public ResponseEntity<Integer> createCategory(@RequestBody CategoryDto categoryDto){
         return ResponseEntity.ok(categoryService.createCategory(categoryDto));
     }
 
     @DeleteMapping(value = "/admin/categories")
-    public ResponseEntity<Integer> delete(@RequestBody CategoryDto categoryDto){
+    public ResponseEntity<Integer> deleteCategory(@RequestBody CategoryDto categoryDto){
         return ResponseEntity.ok(categoryService.deleteCategory(categoryDto));
     }
 
     @PatchMapping(value = "/admin/categories")
-    public ResponseEntity<Integer> update(@RequestBody CategoryDto categoryDto){
+    public ResponseEntity<Integer> updateCategory(@RequestBody CategoryDto categoryDto){
         return ResponseEntity.ok(categoryService.updateCategory(categoryDto));
     }
 }

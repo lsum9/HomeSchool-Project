@@ -18,19 +18,19 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping(value = "/admin/users")
-    public ResponseEntity<List<UserDto>> user(@RequestParam Map<String, String> keywords){
+    public ResponseEntity<List<UserDto>> readUserList(@RequestParam Map<String, String> keywords){
         PagingVo pagingVo = new PagingVo();
         pagingVo.setKeywords(keywords);
-        return ResponseEntity.ok(userService.readUser(pagingVo));
+        return ResponseEntity.ok(userService.readUserList(pagingVo));
     }
 
     @DeleteMapping(value = "admin/users/{userNo}")
-    public ResponseEntity<Integer> delete(@PathVariable int userNo){
+    public ResponseEntity<Integer> deleteUser(@PathVariable int userNo){
         return ResponseEntity.ok(userService.deleteUser(userNo));
     }
 
     @PatchMapping(value = "admin/users/{userNo}")
-    public ResponseEntity<Integer> update(@PathVariable int userNo
+    public ResponseEntity<Integer> updateUser(@PathVariable int userNo
                                         ,@RequestBody UserDto userDto){
         return ResponseEntity.ok(userService.updateUser(userDto));
     }

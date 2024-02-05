@@ -9,9 +9,11 @@ public class ClassDto {
     private Long classNo;
     private Long teacherUserNo;
     private int subjectNo;
+    private String subjectTitle;
     private String classTitle;
     private int classMemberNum;
     private String classStrtDt;
     private String classEndDt;
     private String classStatus;
+    private int joinCnt;
 }

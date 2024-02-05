@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.home_school.teacher.mapper.ClassMapper">
+    <select id="classCnt" parameterType="PagingVo" resultType="int">
+        SELECT
+            COUNT(class_no)
+        FROM homeschool.tb_class c
+        JOIN tb_user u
+        on c.teacher_user_no = u.user_no
+        JOIN tb_profile p
+        ON u.user_no = p.user_no
+        <where>
+            <foreach collection="keywords" index="key" item="word" separator="and">
+                <if test="key== 'gradeNo'">
+                    grade_no = #{word}
+                </if>
+                <if test="key== 'subjectNo'">
+                    subject_no = #{word}
+                </if>
+                <if test="key == 'classTitle'">
+                    class_title LIKE CONCAT('%', #{word}, '%')
+                </if>
+                <if test="key == 'teacherName'">
+                    user_name LIKE CONCAT('%', #{word}, '%')
+                </if>
+            </foreach>
+        </where>
+    </select>
+
+    <select id="readClassList" parameterType="PagingVo" resultType="ClassDto">
+
+        SELECT
+            c.class_no
+             , s.subject_no
+             , subject_title
+             , class_title
+             , class_member_num
+             , class_strt_dt
+             , class_end_dt
+             , class_status
+             , subject_title
+             , count(join_no) AS join_cnt
+        FROM
+            homeschool.tb_class c
+        JOIN
+            tb_subject s
+        ON c.subject_no = s.subject_no
+        LEFT JOIN
+            tb_class_join cj
+        ON c.class_no = cj.class_no
+        <where>
+            <foreach collection="keywords" index="key" item="word" separator="and">
+                <if test="key== 'gradeNo'">
+                    c.grade_no = #{word}
+                </if>
+                <if test="key== 'subjectNo'">
+                    c.subject_no = #{word}
+                </if>
+                <if test="key == 'classTitle'">
+                    class_title LIKE CONCAT('%', #{word}, '%')
+                </if>
+                <if test="key == 'on'">
+                   class_strt_dt  <![CDATA[ <= current_timestamp() ]]>
+                   and class_end_dt >= current_timestamp()
+                   and class_status = 'y'
+                </if>
+                <if test="key == 'off'">
+                    class_strt_dt > current_timestamp()
+                    and class_end_dt <![CDATA[ < current_timestamp() ]]>
+                    and class_status != 'y'
+                </if>
+            </foreach>
+            AND join_status = 'y'
+        </where>
+        GROUP BY c.class_no
+        ORDER BY c.frst_wrt_dt DESC
+        LIMIT #{rowPerPage} OFFSET #{startRow};
+
+    </select>
+
+    <insert id="createClass" parameterType="ClassDto">
+        INSERT INTO
+            homeschool.tb_class
+            (
+             teacher_user_no
+            , subject_no
+            , class_title
+            , class_member_num
+            , class_strt_dt
+            , class_end_dt
+            , class_status
+            , frst_wrt_id
+            , last_wrt_id
+            )
+        VALUES
+            (
+            #{teacherUserNo}
+            , #{subjectNo}
+            , #{classTitle}
+            , #{classMemberNum}
+            , #{classStrtDt}
+            , #{classEndDt}
+            , #{classStatus}
+            , #{frstWrtId}
+            , #{lastWrtId}
+             );
+    </insert>
+
+    <delete id="deleteClass" parameterType="Long">
+        DELETE FROM homeschool.tb_class
+        WHERE class_no=#{classNo};
+    </delete>
+
+    <update id="updateClass" parameterType="ClassDto">
+        UPDATE
+            homeschool.tb_class
+        SET
+            subject_no=#{subjectNo}
+          , class_title=#{classTitle}
+          , class_member_num=#{classMemberNum}
+          , class_strt_dt=#{classStrtDt}
+          , class_end_dt=#{classEndDt}
+          , class_status=#{classStatus}
+          , last_wrt_dt=current_timestamp()
+          , last_wrt_id=#{userNo}
+        WHERE class_no=#{classNo};
+    </update>
+
+</mapper>

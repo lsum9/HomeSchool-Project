@@ -24,7 +24,7 @@
 
     </select>
 
-    <select id="readUser" parameterType="PagingVo" resultType="UserDto">
+    <select id="readUserList" parameterType="PagingVo" resultType="UserDto">
         SELECT
             u.user_no
              , user_id

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface CategoryMapper {
-    List<CategoryDto> readCategory(PagingVo pagingVo);
+    List<CategoryDto> readCategoryList(PagingVo pagingVo);
 
     int categoryCnt(PagingVo pagingVo);
     int createCategory(CategoryDto categoryDto);

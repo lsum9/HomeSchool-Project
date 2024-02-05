@@ -20,18 +20,18 @@ public class QuestionService {
     private final Paging paging;
 
     @Transactional(readOnly = true)
-    public List<QuestionDto> readQuestion(PagingVo pagingVo){
+    public List<QuestionDto> readQuestionList(PagingVo pagingVo){
         //총 로우수 pagingVo에 추가
         pagingVo.setTotalRow(questionCnt(pagingVo));
         //가공된 키워드, 현재페이지, 총 로우 수 담긴 pagingVo 페이징 클래스로 넘기기
         pagingVo=paging.pagingInfo(pagingVo);
-        //System.out.println("서비스 페이징"+pagingVo);
-        return questionMapper.readQuestion(pagingVo);
+        return questionMapper.readQuestionList(pagingVo);
     }
 
     //총 글개수
     @Transactional(readOnly = true)
     public int questionCnt(PagingVo pagingVo){
+        pagingVo=paging.pagingInfo(pagingVo);
         return questionMapper.questionCnt(pagingVo);
     }
 
@@ -58,13 +58,13 @@ public class QuestionService {
         pagingVo.setTotalRow(questionScriptCnt(pagingVo));
         //가공된 키워드, 현재페이지, 총 로우 수 담긴 pagingVo 페이징 클래스로 넘기기
         pagingVo=paging.pagingInfo(pagingVo);
-        //System.out.println("서비스 페이징"+pagingVo);
         return questionScriptMapper.readQuestionScript(pagingVo);
     }
 
     //총 글개수
     @Transactional(readOnly = true)
     public int questionScriptCnt(PagingVo pagingVo){
+        pagingVo=paging.pagingInfo(pagingVo);
         return questionScriptMapper.questionScriptCnt(pagingVo);
     }
     @Transactional

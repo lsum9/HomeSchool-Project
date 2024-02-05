@@ -25,7 +25,7 @@
         </foreach>
     </select>
 
-    <select id="readCategory" parameterType="PagingVo" resultType="CategoryDto">
+    <select id="readCategoryList" parameterType="PagingVo" resultType="CategoryDto">
         <if test = "keywords.isEmpty()">
             SELECT
                 s.subject_no
