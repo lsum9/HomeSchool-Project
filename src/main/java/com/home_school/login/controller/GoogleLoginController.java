@@ -1,8 +1,8 @@
-package com.home_school.oAuthLogin.controller;
+package com.home_school.login.controller;
 
-import com.home_school.oAuthLogin.dto.GoogleLoginResponse;
-import com.home_school.oAuthLogin.dto.GoogleOAuthRequest;
-import com.home_school.oAuthLogin.service.GoogleLoginService;
+import com.home_school.login.dto.GoogleLoginResponse;
+import com.home_school.login.dto.GoogleOAuthRequest;
+import com.home_school.login.service.GoogleLoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -53,12 +53,12 @@ public class GoogleLoginController {
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
+    //토큰발급을 위한 구글로그인 리디렉션
     @GetMapping(value = "/login/oauth_google_check")
     public String googleCheck(@RequestParam(value = "code") String authCode
                              ) throws Exception{
 
-
-        //받아온 인증코드를 보내 토큰을 얻음
+        //토큰을 얻기 위해 인증코드를 포함한 요청 작성
         GoogleOAuthRequest googleOAuthRequest = GoogleOAuthRequest
                 .builder()
                 .clientId(googleClientId)
@@ -101,7 +101,12 @@ public class GoogleLoginController {
                 .bodyToMono(String.class)
                 .block();
 
+         //받아온 정보 db에 저장
+
          return jsonReturn;
     }
+    
+    
+    
 
 }

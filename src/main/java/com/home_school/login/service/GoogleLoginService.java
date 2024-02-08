@@ -1,6 +1,6 @@
-package com.home_school.oAuthLogin.service;
+package com.home_school.login.service;
 
-import com.home_school.oAuthLogin.dto.GoogleOAuthRequest;
+import com.home_school.login.dto.GoogleOAuthRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

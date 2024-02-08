@@ -1,4 +1,4 @@
-package com.home_school.oAuthLogin.dto;
+package com.home_school.login.dto;
 
 import lombok.Builder;
 import lombok.Data;
