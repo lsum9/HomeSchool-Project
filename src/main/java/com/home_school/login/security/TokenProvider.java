@@ -89,7 +89,6 @@ public class TokenProvider {
     //수정요망
     @Transactional(readOnly = true)
     public void validateRefreshToken(String refreshToken, String oldAccessToken) throws JsonProcessingException {
-        System.out.println("validation 호출되긴함?");
         //리프레시 토큰 유효성 검사
         validateAndParseToken(refreshToken);
         String userId = decodeJwtPayloadSubject(oldAccessToken).split(":")[0];

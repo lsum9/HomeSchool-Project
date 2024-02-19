@@ -9,28 +9,28 @@
             refresh_token
         FROM
             tb_refresh_token
-        WHERE user_id=#{userId};
+        WHERE user_code=#{userCode};
     </select>
 
-    <insert id="insertRefreshToken" parameterType="UserDto">
+    <insert id="insertRefreshToken" parameterType="TokenDto">
         INSERT INTO
             lsum9.tb_refresh_token
                 (
-                 user_id
+                 user_code
                 , refresh_token
                 )
             VALUES
                 (
-                 #{userId}
+                 #{userCode}
                 , #{refreshToken}
                 );
 
     </insert>
-    <update id="updateRefreshToken" parameterType="String">
+    <update id="updateRefreshToken" parameterType="TokenDto">
         UPDATE
             tb_refresh_token
         SET refresh_token=#{refreshToken}
-        WHERE user_id=#{userId};
+        WHERE user_code=#{userCode};
     </update>
 
 
