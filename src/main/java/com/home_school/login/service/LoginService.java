@@ -28,11 +28,11 @@ public class LoginService {
             //미가입자라면 인서트
             loginMapper.signUp(loginUserDto);
             //미가입자라면 회원가입 폼으로 이동
-            return "/sign-up-form";
+            return "sign-up-form";
         }else{
             //가입자라면 로그인 폼으로 이동
             //정식가입자 조건 추가 필요 **************************************************************************
-            return "/main";
+            return "main";
         }
     }//signCheck() end
 

@@ -28,12 +28,18 @@ public class SignController {
     private final LoginService loginService;
     private final CookieUtil cookieUtil;
 
+    @PostMapping("/signCheck")
+    public ModelAndView signCheck(@RequestBody LoginUserDto loginUserDto){
+        log.info(loginUserDto);
+        ModelAndView mav = new ModelAndView(loginService.signCheck(loginUserDto));
+        mav.addObject("loginUserDto",loginUserDto);
+        return mav;
+    }
+
     //추가정보 입력창
     @GetMapping("/sign-up-form")
     public ModelAndView signUpForm(){
         ModelAndView mav = new ModelAndView("sign-up-form");
-
-
         //mav.addObject("loginUserDto", loginUserDto);
         return mav;
     }

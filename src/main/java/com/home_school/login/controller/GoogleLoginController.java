@@ -67,7 +67,7 @@ public class GoogleLoginController {
 
     //토큰발급을 위한 구글로그인 리디렉션
     @GetMapping(value = "/login/oauth_google_check")
-    public ResponseEntity<Void> googleCheck(@RequestParam(value = "code") String authCode
+    public void googleCheck(@RequestParam(value = "code") String authCode
                             ) throws Exception{
 
         //토큰을 얻기 위해 인증코드를 포함한 요청 작성
@@ -108,21 +108,20 @@ public class GoogleLoginController {
                 .bodyToMono(LoginUserDto.class)
                 .block();
 
+        webClient.post()
+                .uri(homeSchoolUrl+"/signCheck")
+                .bodyValue(userInfo) // 유저 정보를 body로 포함
+                .retrieve()
+                .toBodilessEntity() // 응답을 받지 않음
+                .block(); // 요청을 동기적으로 보냄
+
         //가입여부 확인 후 미가입자면 인서트
-        String signCheck = loginService.signCheck(userInfo);
+       /* String signCheck = loginService.signCheck(userInfo);
         //signUpForm(userInfo);
         URI redirectUri = URI.create(homeSchoolUrl + signCheck); // 리다이렉트할 페이지의 URI 설정
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(redirectUri);
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);*/
     }
-
-   /* @GetMapping("/main")
-    public ModelAndView main(LoginUserDto loginUserDto){
-        log.info(loginUserDto);
-        ModelAndView mav = new ModelAndView("login");
-        mav.addObject("loginUserDto", loginUserDto);
-        return mav;
-    }*/
 
 }
