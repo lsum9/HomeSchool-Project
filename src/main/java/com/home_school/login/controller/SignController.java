@@ -10,13 +10,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.net.URI;
 
 @Log4j2
 @RestController
@@ -29,14 +26,18 @@ public class SignController {
     private final CookieUtil cookieUtil;
 
     @PostMapping("/signCheck")
-    public ModelAndView signCheck(@RequestBody LoginUserDto loginUserDto){
-        log.info(loginUserDto);
-        ModelAndView mav = new ModelAndView(loginService.signCheck(loginUserDto));
-        mav.addObject("loginUserDto",loginUserDto);
-        return mav;
+    public String signCheck(@RequestBody LoginUserDto loginUserDto){
+        return loginService.signCheck(loginUserDto);
+    }
+
+    @PostMapping("/tokenMake")
+    public String tokenMake(@RequestBody LoginUserDto loginUserDto){
+        log.info("토큰발급시 유저정보 매개변수 확인 : "+loginUserDto);
+        return loginService.tokenMake(loginUserDto);
     }
 
     //추가정보 입력창
+    @UserAuthorize
     @GetMapping("/sign-up-form")
     public ModelAndView signUpForm(){
         ModelAndView mav = new ModelAndView("sign-up-form");
@@ -44,9 +45,16 @@ public class SignController {
         return mav;
     }
 
+    //로그인 후 메인페이지
+    @GetMapping("/main")
+    public ModelAndView mainPage(){
+        ModelAndView mav = new ModelAndView("main");
+        //mav.addObject("loginUserDto", loginUserDto);
+        return mav;
+    }
 
     //로그인-회원가입 절차
-    @UserAuthorize
+    /*
     @PostMapping
     public void sign(LoginUserDto loginUserDto){
         //기존유저, 신규유저 각각 다른 url로 보내기
@@ -55,19 +63,10 @@ public class SignController {
 
         WebClient webClient = WebClient.create();
 
-        /*webClient.post()
-                .uri(homeSchoolUrl+signUrl)
-                .bodyValue(loginUserDto)
-                .retrieve()
-                .bodyToMono(Void.class) // 반환 값이 필요 없는 경우에는 Void.class를 사용
-                .subscribe(); // 요청을 비동기적으로 보냄*/
-
         webClient.get()
                 .uri(homeSchoolUrl+signUrl)
                 .retrieve()
                 .bodyToMono(Void.class) // 반환 값이 필요 없는 경우에는 Void.class를 사용
                 .subscribe(); // 요청을 비동기적으로 보냄
-    }
-
-
+    }*/
 }

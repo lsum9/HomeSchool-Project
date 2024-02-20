@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.home_school.mapper.login.RefreshTokenMapper">
+<mapper namespace="com.home_school.login.mapper.RefreshTokenMapper">
 
     <select id="selectRefreshToken" parameterType="String" resultType="String">
         SELECT
@@ -14,14 +14,14 @@
 
     <insert id="insertRefreshToken" parameterType="TokenDto">
         INSERT INTO
-            lsum9.tb_refresh_token
+            tb_refresh_token
                 (
                  user_code
                 , refresh_token
                 )
             VALUES
                 (
-                 #{userCode}
+                 #{sub}
                 , #{refreshToken}
                 );
 

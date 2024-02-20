@@ -48,6 +48,7 @@ public class GoogleLoginController {
     private String homeSchoolUrl;
 
     private final LoginService loginService;
+    private final CookieUtil cookieUtil;
     @GetMapping(value = "/login")
     public ResponseEntity<?> loginPage() throws Exception{
 
@@ -67,7 +68,7 @@ public class GoogleLoginController {
 
     //토큰발급을 위한 구글로그인 리디렉션
     @GetMapping(value = "/login/oauth_google_check")
-    public void googleCheck(@RequestParam(value = "code") String authCode
+    public ResponseEntity<Void> googleCheck(@RequestParam(value = "code") String authCode
                             ) throws Exception{
 
         //토큰을 얻기 위해 인증코드를 포함한 요청 작성
@@ -108,20 +109,24 @@ public class GoogleLoginController {
                 .bodyToMono(LoginUserDto.class)
                 .block();
 
-        webClient.post()
-                .uri(homeSchoolUrl+"/signCheck")
-                .bodyValue(userInfo) // 유저 정보를 body로 포함
-                .retrieve()
-                .toBodilessEntity() // 응답을 받지 않음
-                .block(); // 요청을 동기적으로 보냄
-
         //가입여부 확인 후 미가입자면 인서트
-       /* String signCheck = loginService.signCheck(userInfo);
-        //signUpForm(userInfo);
+        String signCheck = loginService.signCheck(userInfo);
+
+        ///토큰발급절차 분리 필요 + 유저코드 null로 들어가는 오류
+        //받아온 유저정보 바탕으로 토큰발급
+        String token = webClient
+                .post()
+                .uri(homeSchoolUrl+"/tokenMake")
+                .bodyValue(userInfo)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        //header에 쿠키추가
+        cookieUtil.addTokenToCookie(token);
         URI redirectUri = URI.create(homeSchoolUrl + signCheck); // 리다이렉트할 페이지의 URI 설정
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(redirectUri);
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);*/
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
-
 }

@@ -7,6 +7,7 @@ public class LoginUserDto {
     private String userId;
     private String userType;
     private String token;
+    private String refreshToken;
     private String userName;
     private String userEmail;
     private String profileText;
