@@ -21,11 +21,11 @@
                 )
             VALUES
                 (
-                 #{sub}
+                 #{userCode}
                 , #{refreshToken}
                 );
-
     </insert>
+
     <update id="updateRefreshToken" parameterType="TokenDto">
         UPDATE
             tb_refresh_token

@@ -7,4 +7,5 @@ public class GoogleTokenResponse {
     private String name;
     private String email;
     private String sub;
+    private String picture;
 }

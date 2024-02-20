@@ -1,4 +1,4 @@
-package com.home_school.admin.dto;
+package com.home_school.login.dto;
 
 import lombok.Data;
 

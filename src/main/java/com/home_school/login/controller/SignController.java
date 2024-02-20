@@ -1,17 +1,13 @@
 package com.home_school.login.controller;
 
-import com.home_school.admin.dto.TokenDto;
 import com.home_school.login.common.UserAuthorize;
-import com.home_school.login.dto.LoginUserDto;
+import com.home_school.login.dto.SignDto;
 import com.home_school.login.security.CookieUtil;
 import com.home_school.login.service.LoginService;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.ModelAndView;
 
 
@@ -24,16 +20,15 @@ public class SignController {
 
     private final LoginService loginService;
     private final CookieUtil cookieUtil;
-
-    @PostMapping("/signCheck")
-    public String signCheck(@RequestBody LoginUserDto loginUserDto){
-        return loginService.signCheck(loginUserDto);
-    }
+   /* @PostMapping("/signCheck")
+    public String signCheck(@RequestBody SignDto signDto){
+        return loginService.signCheck(signDto);
+    }*/
 
     @PostMapping("/tokenMake")
-    public String tokenMake(@RequestBody LoginUserDto loginUserDto){
-        log.info("토큰발급시 유저정보 매개변수 확인 : "+loginUserDto);
-        return loginService.tokenMake(loginUserDto);
+    public String tokenMake(@RequestBody SignDto signDto){
+        log.info("토큰발급시 유저정보 매개변수 확인 : "+signDto);
+        return loginService.tokenMake(signDto);
     }
 
     //추가정보 입력창

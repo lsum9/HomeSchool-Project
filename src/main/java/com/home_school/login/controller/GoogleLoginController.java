@@ -1,29 +1,22 @@
 package com.home_school.login.controller;
 
-import com.home_school.admin.dto.TokenDto;
-import com.home_school.login.dto.GoogleLoginResponse;
-import com.home_school.login.dto.GoogleOAuthRequest;
-import com.home_school.login.dto.LoginUserDto;
+import com.home_school.login.dto.*;
 import com.home_school.login.security.CookieUtil;
 import com.home_school.login.service.LoginService;
-import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
-import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 @Log4j2
 @RestController
@@ -99,34 +92,40 @@ public class GoogleLoginController {
                 .fromHttpUrl(googleAuthUrl + "/tokeninfo")
                 .queryParam("id_token", googleToken)
                 .toUriString();
-        //String requestUrl = googleLoginService.requestForUserInfo(googleToken);
 
         //토큰포함 정보를 보내 유저정보 받아오기
-        LoginUserDto userInfo = webClient
+        GoogleTokenResponse googleTokenResponse = webClient
                 .get()
                 .uri(requestUrl)
                 .retrieve()
-                .bodyToMono(LoginUserDto.class)
+                .bodyToMono(GoogleTokenResponse.class)
                 .block();
 
-        //가입여부 확인 후 미가입자면 인서트
-        String signCheck = loginService.signCheck(userInfo);
+        SignDto signDto = new SignDto();
+        signDto.setUserCode(googleTokenResponse.getSub());
+        signDto.setUserName(googleTokenResponse.getName());
+        signDto.setUserId(googleTokenResponse.getEmail());
 
-        ///토큰발급절차 분리 필요 + 유저코드 null로 들어가는 오류
-        //받아온 유저정보 바탕으로 토큰발급
-        String token = webClient
-                .post()
-                .uri(homeSchoolUrl+"/tokenMake")
-                .bodyValue(userInfo)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        //가입여부에 따른 처리 결과 signMap
+        // 1. 리디렉 url 구성(신규유저: /sign-up-form, 기존유저: /main)
+        // 2. 미가입시 인서트
+        // 3. 토큰발급
+        Map<String, String> signMap = new HashMap<>();
+        signMap = loginService.sign(signDto);
 
-        //header에 쿠키추가
-        cookieUtil.addTokenToCookie(token);
-        URI redirectUri = URI.create(homeSchoolUrl + signCheck); // 리다이렉트할 페이지의 URI 설정
+        // 헤더에 토큰을 추가할 쿠키 생성
+        String token = signMap.get("token");
         HttpHeaders headers = new HttpHeaders();
+        headers.add("Set-Cookie", "token=" + token + "; Path=/; Max-Age=3600");
+        URI redirectUri = URI.create(homeSchoolUrl + signMap.get("url")); // 리다이렉트할 페이지의 URI 설정
+        // 리다이렉트 응답을 생성하여 반환
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .headers(headers)
+                .location(redirectUri)
+                .build();
+
+        /*
         headers.setLocation(redirectUri);
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);*/
     }
 }
