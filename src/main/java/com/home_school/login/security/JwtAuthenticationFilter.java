@@ -36,7 +36,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             authenticated.setDetails(new WebAuthenticationDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticated);
         } catch (ExpiredJwtException e) {	// 변경
-            System.out.println("만료확인");
             reissueAccessToken(request, response, e);
         } catch (Exception e) {
             request.setAttribute("exception", e);	// try-catch로 예외를 감지하여 request에 추가

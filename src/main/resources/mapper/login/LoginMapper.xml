@@ -10,7 +10,7 @@
       WHERE user_code=#{userCode}
   </select>
 
-    <insert id="signUp" parameterType="SignDto">
+    <insert id="userInsert" parameterType="SignDto">
         INSERT INTO
             homeschool.tb_user
             (
@@ -44,5 +44,13 @@
             user_status = 'y'
     </select>
 
+    <update id="signUpdate" parameterType="SignDto">
+        UPDATE
+            homeschool.tb_user
+        SET
+            user_type=#{userType}
+          , last_wrt_dt=current_timestamp()
+        WHERE user_code=#{userCode};
+    </update>
 
 </mapper>

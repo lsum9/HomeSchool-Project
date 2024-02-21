@@ -10,9 +10,11 @@ public interface LoginMapper {
     //구글sub로 가입여부 체크
     int signCheck(SignDto signDto);
 
-    int signUp(SignDto signDto);
+    int userInsert(SignDto signDto);
 
     SignDto selectUser(String userCode);
+
+    int signUpdate(SignDto signDto);
 
     //int insertProfile(SignDto signDto);
 

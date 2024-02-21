@@ -4,6 +4,7 @@ import com.home_school.login.dto.*;
 import com.home_school.login.security.CookieUtil;
 import com.home_school.login.service.LoginService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -61,8 +64,8 @@ public class GoogleLoginController {
 
     //토큰발급을 위한 구글로그인 리디렉션
     @GetMapping(value = "/login/oauth_google_check")
-    public ResponseEntity<Void> googleCheck(@RequestParam(value = "code") String authCode
-                            ) throws Exception{
+    public void googleCheck(@RequestParam(value = "code") String authCode
+                            ,HttpServletResponse response) throws Exception{
 
         //토큰을 얻기 위해 인증코드를 포함한 요청 작성
         GoogleOAuthRequest googleOAuthRequest = GoogleOAuthRequest
@@ -113,19 +116,15 @@ public class GoogleLoginController {
         Map<String, String> signMap = new HashMap<>();
         signMap = loginService.sign(signDto);
 
-        // 헤더에 토큰을 추가할 쿠키 생성
+        //쿠키에 토큰추가
         String token = signMap.get("token");
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", "token=" + token + "; Path=/; Max-Age=3600");
-        URI redirectUri = URI.create(homeSchoolUrl + signMap.get("url")); // 리다이렉트할 페이지의 URI 설정
-        // 리다이렉트 응답을 생성하여 반환
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .headers(headers)
-                .location(redirectUri)
-                .build();
+        cookieUtil.addTokenToCookie(token);
+        response.sendRedirect(homeSchoolUrl + signMap.get("url"));
 
-        /*
+       /* HttpHeaders headers = new HttpHeaders();
+        URI redirectUri = URI.create(homeSchoolUrl + signMap.get("url")); // 리다이렉트할 페이지의 URI 설정
         headers.setLocation(redirectUri);
+        log.info("헤더확인 : "+headers);
         return new ResponseEntity<>(headers, HttpStatus.FOUND);*/
     }
 }

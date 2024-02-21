@@ -115,4 +115,8 @@ public class TokenProvider {
                 Map.class
         ).get("sub").toString();
     }
+
+    public String userCodeFromToken(String token) throws JsonProcessingException {
+        return decodeJwtPayloadSubject(token).split(":")[0];
+    }
 }

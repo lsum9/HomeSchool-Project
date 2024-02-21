@@ -1,12 +1,17 @@
 package com.home_school.login.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.home_school.login.common.UserAuthorize;
 import com.home_school.login.dto.SignDto;
 import com.home_school.login.security.CookieUtil;
 import com.home_school.login.service.LoginService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,19 +22,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class SignController {
     @Value("${home.url}")
     private String homeSchoolUrl;
-
-    private final LoginService loginService;
     private final CookieUtil cookieUtil;
-   /* @PostMapping("/signCheck")
-    public String signCheck(@RequestBody SignDto signDto){
-        return loginService.signCheck(signDto);
-    }*/
+    private final LoginService loginService;
 
-    @PostMapping("/tokenMake")
-    public String tokenMake(@RequestBody SignDto signDto){
-        log.info("토큰발급시 유저정보 매개변수 확인 : "+signDto);
-        return loginService.tokenMake(signDto);
-    }
 
     //추가정보 입력창
     @UserAuthorize
@@ -38,6 +33,20 @@ public class SignController {
         ModelAndView mav = new ModelAndView("sign-up-form");
         //mav.addObject("loginUserDto", loginUserDto);
         return mav;
+    }
+
+    //추가정보 입력하여 가입 + 토큰 재발급
+    @PostMapping("/sign-up")
+    public ResponseEntity<Integer> signUp(@ModelAttribute SignDto signDto, HttpServletRequest request) throws JsonProcessingException {
+        String userCode = cookieUtil.getTokenFromCookie(request);
+        log.info("추출유저코드: "+userCode);
+        signDto.setUserCode(userCode);
+        int cnt = loginService.signUpdate(signDto);
+        
+        //토큰 재발급해 쿠키 추가
+        String token = loginService.tokenMake(signDto);
+        cookieUtil.addTokenToCookie(token);
+        return ResponseEntity.ok(cnt);
     }
 
     //로그인 후 메인페이지
