@@ -1,4 +1,3 @@
-/*
 package com.home_school.teacher.service;
 
 import com.home_school.teacher.dto.HomeworkDto;
@@ -33,11 +32,10 @@ public class HomeworkService {
         return homeworkMapper.readHomeworkList(pagingVo);
     }
 
-    */
 /*@Transactional(readOnly = true)
     public Map<String,Object> readHomeworkDetail(Long HomeworkNo){
         return HomeworkMapper.readHomeworkDetail(HomeworkNo);
-    }*//*
+    }*/
 
 
     @Transactional
@@ -56,4 +54,3 @@ public class HomeworkService {
     }
 
 }
-*/

@@ -1,4 +1,3 @@
-/*
 package com.home_school.teacher.controller;
 
 import com.home_school.teacher.dto.HomeworkDto;
@@ -27,34 +26,26 @@ public class HomeworkController {
         PagingVo pagingVo = new PagingVo();
         pagingVo.setKeywords(keywords);
         pagingVo.setUserCode(user.getUsername());
-        return ResponseEntity.ok(HomeworkService.readHomeworkList(pagingVo));
+        return ResponseEntity.ok(homeworkService.readHomeworkList(pagingVo));
     }
 
-    //강좌상세조회
-    */
-/*@GetMapping(value = "/teacher/homeworks/{HomeworkNo}")
-    public ResponseEntity<Map<String,Object>> readHomeworkDetail(@PathVariable Long HomeworkNo){
-        return ResponseEntity.ok((HomeworkService.readHomeworkDetail(HomeworkNo)));
-    }*//*
 
-
-    //강좌생성
+    //과제생성
     @PostMapping(value = "/teacher/homeworks")
     public ResponseEntity<Integer> createHomework(@RequestBody HomeworkDto homeworkDto
                                             ,@AuthenticationPrincipal User user){
-        return ResponseEntity.ok(HomeworkService.createHomework(homeworkDto, user.getUsername()));
+        return ResponseEntity.ok(homeworkService.createHomework(homeworkDto, user.getUsername()));
     }
 
-    //강좌삭제
+    //과제삭제
     @DeleteMapping(value = "/teacher/homeworks/{homeworkNo}")
     public ResponseEntity<Integer> deleteHomework(@PathVariable Long homeworkNo){
-        return ResponseEntity.ok(HomeworkService.deleteHomework(homeworkNo));
+        return ResponseEntity.ok(homeworkService.deleteHomework(homeworkNo));
     }
 
-    //강좌 수정
+    //과제수정
     @PatchMapping(value = "/teacher/homeworks")
     public ResponseEntity<Integer> updateHomework(@RequestBody HomeworkDto homeworkDto){
-        return ResponseEntity.ok(HomeworkService.updateHomework(homeworkDto));
+        return ResponseEntity.ok(homeworkService.updateHomework(homeworkDto));
     }
 }
-*/

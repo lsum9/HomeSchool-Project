@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class ClassDto {
     private Long classNo;
     private Long teacherUserNo;
@@ -15,6 +14,9 @@ public class ClassDto {
     private String classStrtDt;
     private String classEndDt;
     private String classStatus;
+    private String frstWrtId;
+    private String lastWrtId;
+
     private int joinCnt;
 
     private String userCode;
