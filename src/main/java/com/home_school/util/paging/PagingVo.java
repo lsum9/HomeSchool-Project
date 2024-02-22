@@ -23,4 +23,5 @@ public class PagingVo {
     private int startPageNum;
     private int endPageNum;
     private Map<String, String> keywords;
+    private String userCode;
 }

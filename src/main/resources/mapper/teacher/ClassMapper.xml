@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-
 <mapper namespace="com.home_school.teacher.mapper.ClassMapper">
     <select id="classCnt" parameterType="PagingVo" resultType="int">
         SELECT
@@ -28,10 +27,10 @@
                 </if>
             </foreach>
         </where>
+        AND user_code = #{userCode}
     </select>
 
     <select id="readClassList" parameterType="PagingVo" resultType="ClassDto">
-
         SELECT
             c.class_no
              , s.subject_no
@@ -48,6 +47,9 @@
         JOIN
             tb_subject s
         ON c.subject_no = s.subject_no
+        JOIN
+            tb_user u
+        on c.teacher_user_no = u.user_no
         LEFT JOIN
             tb_class_join cj
         ON c.class_no = cj.class_no
@@ -75,13 +77,14 @@
             </foreach>
             AND join_status = 'y'
         </where>
+        AND user_code = #{userCode}
         GROUP BY c.class_no
         ORDER BY c.frst_wrt_dt DESC
         LIMIT #{rowPerPage} OFFSET #{startRow};
 
     </select>
 
-    <insert id="createClass" parameterType="ClassDto">
+ <!--   <insert id="createClass" parameterType="ClassDto">
         INSERT INTO
             homeschool.tb_class
             (
@@ -107,6 +110,39 @@
             , #{frstWrtId}
             , #{lastWrtId}
              );
+    </insert>-->
+
+    <insert id="createClass" parameterType="ClassDto">
+        <selectKey resultType="long" keyProperty="teacherUserNo" order="BEFORE">
+            SELECT user_no
+            FROM tb_user
+            WHERE user_code = #{userCode}
+        </selectKey>
+            INSERT INTO
+            homeschool.tb_class
+            (
+            teacher_user_no
+            , subject_no
+            , class_title
+            , class_member_num
+            , class_strt_dt
+            , class_end_dt
+            , class_status
+            , frst_wrt_id
+            , last_wrt_id
+            )
+            VALUES
+            (
+            #{teacherUserNo}
+            , #{subjectNo}
+            , #{classTitle}
+            , #{classMemberNum}
+            , #{classStrtDt}
+            , #{classEndDt}
+            , #{classStatus}
+            , #{frstWrtId}
+            , #{lastWrtId}
+            );
     </insert>
 
     <delete id="deleteClass" parameterType="Long">

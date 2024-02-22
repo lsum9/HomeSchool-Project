@@ -16,4 +16,6 @@ public class ClassDto {
     private String classEndDt;
     private String classStatus;
     private int joinCnt;
+
+    private String userCode;
 }

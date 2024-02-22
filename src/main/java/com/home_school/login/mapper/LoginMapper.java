@@ -16,6 +16,8 @@ public interface LoginMapper {
 
     int signUpdate(SignDto signDto);
 
+    String idByCode(String userCode);
+
     //int insertProfile(SignDto signDto);
 
 }

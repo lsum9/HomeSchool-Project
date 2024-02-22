@@ -7,6 +7,7 @@
 <body>
 <h2>Form Page</h2>
 <form action="sign-up" th:action="@{/sign-up}" method="post">
+    <span th:text="${loginUserDto}">Default Text</span>
 
     <input type="radio" id="userType1" name="userType" th:value="t">
     <label for="userType1">선생님</label>
@@ -14,8 +15,8 @@
     <input type="radio" id="userType2" name="userType" th:value="s">
     <label for="userType2">학생</label>
     <br><br>
-    <label for="userName">이름</label>
-    <input type="text" id="userName" name="userName" readonly>
+    <label for="userId">아이디</label>
+    <input type="text" id="userId" name="userId" readonly>
     <br><br>
     <label for="profileText">자기소개</label>
     <textarea id="profileText" name="profileText" placeholder="자기소개를 입력하세요" rows="4" cols="50"></textarea>

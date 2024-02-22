@@ -86,7 +86,6 @@ public class TokenProvider {
         return createToken(subject);
     }
 
-    //수정요망
     @Transactional(readOnly = true)
     public void validateRefreshToken(String refreshToken, String oldAccessToken) throws JsonProcessingException {
         //리프레시 토큰 유효성 검사

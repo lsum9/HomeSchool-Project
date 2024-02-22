@@ -18,6 +18,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,8 +65,8 @@ public class GoogleLoginController {
 
     //토큰발급을 위한 구글로그인 리디렉션
     @GetMapping(value = "/login/oauth_google_check")
-    public void googleCheck(@RequestParam(value = "code") String authCode
-                            ,HttpServletResponse response) throws Exception{
+    public ResponseEntity<Void> googleCheck(@RequestParam(value = "code") String authCode
+                            ) throws Exception{
 
         //토큰을 얻기 위해 인증코드를 포함한 요청 작성
         GoogleOAuthRequest googleOAuthRequest = GoogleOAuthRequest
@@ -119,12 +120,11 @@ public class GoogleLoginController {
         //쿠키에 토큰추가
         String token = signMap.get("token");
         cookieUtil.addTokenToCookie(token);
-        response.sendRedirect(homeSchoolUrl + signMap.get("url"));
 
-       /* HttpHeaders headers = new HttpHeaders();
-        URI redirectUri = URI.create(homeSchoolUrl + signMap.get("url")); // 리다이렉트할 페이지의 URI 설정
-        headers.setLocation(redirectUri);
-        log.info("헤더확인 : "+headers);
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);*/
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", homeSchoolUrl+signMap.get("url"));
+
+        log.info("엑세스토큰확인 : "+token);
+        return ResponseEntity.status(HttpStatus.FOUND).headers(headers).build();
     }
 }

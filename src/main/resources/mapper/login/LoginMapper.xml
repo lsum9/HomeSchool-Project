@@ -32,6 +32,15 @@
              );
     </insert>
 
+    <select id="idByCode" parameterType="String" resultType="String">
+        SELECT
+            user_id
+        FROM
+            tb_user
+        WHERE
+            user_code = #{userCode}
+    </select>
+
     <select id="selectUser" parameterType="String" resultType="SignDto">
         SELECT
             user_code

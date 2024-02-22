@@ -30,15 +30,13 @@ public class ClassService {
         pagingVo.setTotalRow(classCnt(pagingVo));
         //가공된 키워드, 현재페이지, 총 로우 수 담긴 pagingVo 페이징 클래스로 넘기기
         pagingVo=paging.pagingInfo(pagingVo);
-        System.out.println("서비스 페이징"+pagingVo);
         return classMapper.readClassList(pagingVo);
     }
 
-    @Transactional(readOnly = true)
+    /*@Transactional(readOnly = true)
     public Map<String,Object> readClassDetail(Long classNo){
-       // return classMapper.readClassDetail(classNo);
-        return null;
-    }
+        return classMapper.readClassDetail(classNo);
+    }*/
 
     @Transactional
     public int createClass(ClassDto ClassDto){
@@ -53,8 +51,5 @@ public class ClassService {
     public int updateClass(ClassDto ClassDto){
         return classMapper.updateClass(ClassDto);
     }
-
-
-
 
 }

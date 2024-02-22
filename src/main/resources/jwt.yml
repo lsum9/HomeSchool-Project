@@ -1,4 +1,4 @@
 secret-key: eyJhbGciOiJIUzUxMiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcwNzAzNTkwMSwiaWF0IjoxNzA3MDM1OTAxfQ.P0E5VbRqw2MXgsA-ar-jzOLKN2vSSFE-quZnxPXntR5c88ZBkg5YxU9msOHhoqj300zgJHRVFfmQO77tlfFgQw
-expiration-minutes: 1
+expiration-minutes: 10
 refresh-expiration-hours: 24
 issuer: lsum9

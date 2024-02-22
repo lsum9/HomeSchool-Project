@@ -47,14 +47,10 @@ public class LoginService {
         return signMap;
     }
 
-
     //user토큰 발급
     public String tokenMake(SignDto signDto){
-        log.info(signDto);
-
         //토큰 발급
         String token = tokenProvider.createToken(String.format("%s:%s", signDto.getUserCode(), signDto.getUserType()));
-        log.info("엑세스토큰확인 : "+token);
         //tokenDto에 토큰정보 세팅
         TokenDto tokenDto = new TokenDto();
         tokenDto.setAccessToken(token);
@@ -73,12 +69,14 @@ public class LoginService {
         return token;
     }
 
+    //추가정보입력창 가입아이디 노출
+    public String idByCode(String userCode){
+        return loginMapper.idByCode(userCode);
+    }
+
     //추가정보 입력하여 최종 가입절차 진행
     public int signUpdate(SignDto signDto){
         return loginMapper.signUpdate(signDto);
     }
-
-    public String redirectUrl(){
-        return null;
-    }
+    
 }

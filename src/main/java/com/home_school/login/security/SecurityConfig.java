@@ -29,7 +29,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests ->
-                        requests.requestMatchers("/", "/swagger-ui/**", "/v3/**","sign-up","sign-in", "/sign-up-form").permitAll()
+                        requests.requestMatchers("/", "/swagger-ui/**", "/v3/**","sign-up","sign-in").permitAll()
                                 .anyRequest().authenticated()	// 그 외의 모든 요청은 인증 필요
                 )
                 .sessionManagement(sessionManagement ->
