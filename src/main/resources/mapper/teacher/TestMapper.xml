@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.home_school.teacher.mapper.TestMapper">
+    <select id="testCnt" parameterType="PagingVo" resultType="int">
+        SELECT
+            COUNT(test_no)
+        FROM homeschool.tb_test
+        WHERE class_no = #{keywords.classNo}
+    </select>
+
+    <select id="readTestList" parameterType="PagingVo" resultType="TestDto">
+        SELECT
+            test_title
+             ,test_type
+             ,exam_time
+             ,exam_tot_point
+             ,exam_qcnt
+        FROM
+            tb_test t
+            JOIN tb_exam e
+            ON t.exam_no = e.exam_no
+        WHERE class_no = #{keywords.classNo}
+        ORDER BY t.frst_wrt_dt DESC
+        LIMIT #{rowPerPage} OFFSET #{startRow};
+    </select>
+
+    <insert id="createTest" parameterType="TestDto">
+        <!--<selectKey resultType="String" keyProperty="userId" order="BEFORE">
+            SELECT user_id
+            FROM tb_user
+            WHERE user_code = #{userCode}
+        </selectKey>-->
+            INSERT INTO
+            tb_test
+                (
+                 exam_no
+                , class_no
+                , test_title
+                , test_type
+                )
+            VALUES
+                (
+                #{examNo}
+                , #{classNo}
+                , #{testTitle}
+                , #{testType}
+                );
+    </insert>
+
+    <insert id="createTestTarget" parameterType="List">
+        INSERT INTO
+            homeschool.tb_test_target
+            (
+             test_no
+            , student_user_no
+            )
+        VALUES
+        <foreach collection="testTarget" item="item" separator=",">
+            (
+            #{item.testNo}
+            ,#{item.studentUserNo}
+            )
+        </foreach>
+
+    </insert>
+
+    <delete id="deleteTest" parameterType="Long">
+        DELETE FROM homeschool.tb_test
+        WHERE test_no=#{testNo};
+    </delete>
+<!--
+    <update id="updateTest" parameterType="TestDto">
+        <selectKey keyProperty="userId" resultType="String" order="BEFORE">
+            SELECT user_id
+            FROM tb_user
+            WHERE user_code = #{userCode}
+        </selectKey>
+        UPDATE
+            homeschool.tb_test
+        SET
+           test_title=#{testTitle}
+          , exam_no = #{examNo}
+          , last_wrt_dt=current_timestamp()
+          , last_wrt_id=#{userId}
+        WHERE test_no=#{testNo};
+    </update>-->
+
+</mapper>

@@ -84,34 +84,6 @@
 
     </select>
 
- <!--   <insert id="createClass" parameterType="ClassDto">
-        INSERT INTO
-            homeschool.tb_class
-            (
-             teacher_user_no
-            , subject_no
-            , class_title
-            , class_member_num
-            , class_strt_dt
-            , class_end_dt
-            , class_status
-            , frst_wrt_id
-            , last_wrt_id
-            )
-        VALUES
-            (
-            #{teacherUserNo}
-            , #{subjectNo}
-            , #{classTitle}
-            , #{classMemberNum}
-            , #{classStrtDt}
-            , #{classEndDt}
-            , #{classStatus}
-            , #{frstWrtId}
-            , #{lastWrtId}
-             );
-    </insert>-->
-
     <insert id="createClass" parameterType="ClassDto">
         <selectKey resultType="long" keyProperty="teacherUserNo" order="BEFORE">
             SELECT user_no
