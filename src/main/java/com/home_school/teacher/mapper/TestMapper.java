@@ -11,11 +11,15 @@ import java.util.Map;
 public interface TestMapper {
     List<TestDto> readTestList(PagingVo pagingVo);
 
+    List<Map<String,Long>> selectTargetList(Long testNo);
+
     //List<TestDto> readTestDetail(Long TestNo);
     int testCnt(PagingVo pagingVo);
     int createTest(TestDto testDto);
     int createTestTarget(List<Map<String,Long>> testTarget);
     int deleteTest(Long testNo);
+
+    int deleteTestTarget(Long testNo);
     int updateTest(TestDto testDto);
     
 }

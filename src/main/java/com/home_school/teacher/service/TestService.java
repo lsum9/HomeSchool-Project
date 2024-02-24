@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,22 +39,40 @@ public class TestService {
         return testMapper.readTestDetail(TestNo);
     }*/
 
-
     @Transactional
     public int createTest(TestDto testDto){
         //시험 생성 성공 시 시험 대상 인서트
-        int cnt = testMapper.createTest(testDto);
-        System.out.println(testDto.getTestTarget());
+        int testNo = testMapper.createTest(testDto);
+        List<Map<String,Long>> testTargetList = testDto.getTestTarget();
+        System.out.println(testDto.getTestNo());
+        for(Map<String,Long> testTarget: testTargetList){
+            testTarget.put("testNo",testDto.getTestNo());
+        }
         testMapper.createTestTarget(testDto.getTestTarget());
-        return cnt;
+        return testNo;
     }
     @Transactional
     public int deleteTest(Long testNo){
+        //타겟 목록 지우기
+        testMapper.deleteTestTarget(testNo);
         return testMapper.deleteTest(testNo);
     }
 
     @Transactional
     public int updateTest(TestDto testDto){
+        //구 시험 타겟 데이터 저장
+        List<Map<String,Long>> oldTargetList= new ArrayList<>();
+        oldTargetList = testMapper.selectTargetList(testDto.getTestNo());
+
+        //새 시험 타겟 데이터
+        List<Map<String,Long>> newTargetList= new ArrayList<>();
+        newTargetList = testDto.getTestTarget();
+
+        //타겟 목록이 있고 이전 목록과 다르다면 이전 목록 삭제 후 인서트
+        if(newTargetList!=oldTargetList && !newTargetList.isEmpty()){
+            testMapper.deleteTestTarget(testDto.getTestNo());
+            testMapper.createTestTarget(newTargetList);
+        }
         return testMapper.updateTest(testDto);
     }
 

@@ -26,27 +26,30 @@
         LIMIT #{rowPerPage} OFFSET #{startRow};
     </select>
 
-    <insert id="createTest" parameterType="TestDto">
-        <!--<selectKey resultType="String" keyProperty="userId" order="BEFORE">
-            SELECT user_id
-            FROM tb_user
-            WHERE user_code = #{userCode}
-        </selectKey>-->
-            INSERT INTO
-            tb_test
-                (
-                 exam_no
-                , class_no
-                , test_title
-                , test_type
-                )
-            VALUES
-                (
-                #{examNo}
-                , #{classNo}
-                , #{testTitle}
-                , #{testType}
-                );
+    <select id="selectTargetList" parameterType="Long" resultType="Map">
+        SELECT
+            test_target_no
+            ,student_user_no
+        FROM tb_test
+        WHERE test_no=#{testNo}
+    </select>
+
+    <insert id="createTest" parameterType="TestDto" useGeneratedKeys="true" keyProperty="testNo">
+        INSERT INTO
+        tb_test
+            (
+             exam_no
+            , class_no
+            , test_title
+            , test_type
+            )
+        VALUES
+            (
+            #{examNo}
+            , #{classNo}
+            , #{testTitle}
+            , #{testType}
+            )
     </insert>
 
     <insert id="createTestTarget" parameterType="List">
@@ -63,28 +66,27 @@
             ,#{item.studentUserNo}
             )
         </foreach>
-
     </insert>
 
     <delete id="deleteTest" parameterType="Long">
         DELETE FROM homeschool.tb_test
         WHERE test_no=#{testNo};
     </delete>
-<!--
+
+    <delete id="deleteTestTarget" parameterType="Long">
+        DELETE FROM homeschool.tb_test_target
+        WHERE test_no=#{testNo};
+    </delete>
+
     <update id="updateTest" parameterType="TestDto">
-        <selectKey keyProperty="userId" resultType="String" order="BEFORE">
-            SELECT user_id
-            FROM tb_user
-            WHERE user_code = #{userCode}
-        </selectKey>
         UPDATE
             homeschool.tb_test
         SET
            test_title=#{testTitle}
           , exam_no = #{examNo}
           , last_wrt_dt=current_timestamp()
-          , last_wrt_id=#{userId}
         WHERE test_no=#{testNo};
-    </update>-->
+    </update>
+
 
 </mapper>

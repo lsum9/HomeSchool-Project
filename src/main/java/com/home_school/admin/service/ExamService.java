@@ -18,9 +18,7 @@ import java.util.*;
 public class ExamService {
 
     private final ExamMapper examMapper;
-    private final QuestionMapper questionMapper;
     private final Paging paging;
-
 
     //시험개수
     public int examCnt(PagingVo pagingVo){
@@ -67,26 +65,6 @@ public class ExamService {
         examDto.setExamTotPoint(examMapper.readExamTotPoint(examNo));
         //위에서 받아온 문항수, 총점을 tb_exam에 update
         createUpdateExamResult = examMapper.updateExam(examDto);
-
-        //////////////////////////////////////
-        //exam이 성공적으로 insert되면
-        /*
-        if(examMapper.createExam(examDto) ==1){
-            //시험-문제 테이블 인서트 완료되면
-            if(examMapper.createExamQuestion(examDto) == examDto.getExamQuestionNo().size()){
-                Long examNo = examDto.getExamNo();
-                //시험-문제 테이블 경유하여 문항수, 총점 examNo에 등록
-                examDto.setExamQcnt(examMapper.readExamQuestionCnt(examNo));
-                examDto.setExamTotPoint(examMapper.readExamTotPoint(examNo));
-                //위에서 받아온 문항수, 총점을 tb_exam에 update
-                createUpdateExamResult = examMapper.updateExam(examDto);
-                System.out.println("시험작성 서비스 확인: "+examDto);
-                System.out.println(createUpdateExamResult);
-            }else{
-                //시험-문제 테이블 인서트 제대로 처리되지 않았을 때
-                examMapper.deleteExam(examDto.getExamNo());
-            }
-        }*/
         return createUpdateExamResult;
     }
 
