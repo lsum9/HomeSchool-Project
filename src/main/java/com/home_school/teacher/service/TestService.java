@@ -67,6 +67,9 @@ public class TestService {
         //새 시험 타겟 데이터
         List<Map<String,Long>> newTargetList= new ArrayList<>();
         newTargetList = testDto.getTestTarget();
+        for(Map<String,Long> testTarget: newTargetList){
+            testTarget.put("testNo",testDto.getTestNo());
+        }
 
         //타겟 목록이 있고 이전 목록과 다르다면 이전 목록 삭제 후 인서트
         if(newTargetList!=oldTargetList && !newTargetList.isEmpty()){

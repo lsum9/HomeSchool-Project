@@ -26,11 +26,11 @@
         LIMIT #{rowPerPage} OFFSET #{startRow};
     </select>
 
-    <select id="selectTargetList" parameterType="Long" resultType="Map">
+    <select id="selectTargetList" parameterType="Long" resultType="map">
         SELECT
             test_target_no
             ,student_user_no
-        FROM tb_test
+        FROM tb_test_target
         WHERE test_no=#{testNo}
     </select>
 

@@ -15,6 +15,7 @@ public class TestDto {
     private String testTitle;
     private String testType;
     private List<Map<String, Long>> testTarget;
+    private Long testTargetNo;
 
     private String userCode;
 
