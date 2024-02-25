@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.home_school.login.common.UserAuthorize;
 import com.home_school.login.dto.SignDto;
 import com.home_school.login.security.CookieUtil;
+import com.home_school.login.security.TokenProvider;
 import com.home_school.login.service.LoginService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,16 +31,18 @@ public class SignController {
     private String homeSchoolUrl;
     private final CookieUtil cookieUtil;
     private final LoginService loginService;
+    private final TokenProvider tokenProvider;
 
 
     //추가정보 입력창
     @GetMapping("/sign-up-form")
-    public ModelAndView signUpForm(HttpServletRequest request){
-        System.out.println(Arrays.toString(request.getCookies()));
-        //request.getHeaders().get("jwt-token");
+    public ModelAndView signUpForm(HttpServletRequest request) throws JsonProcessingException {
+        //쿠키에 담긴 토큰으로부터 유저code 가져오기
+        String userCode = tokenProvider.userCodeFromToken(cookieUtil.tokenFromCookie(request));
         ModelAndView mav = new ModelAndView("sign-up-form");
-        //String userId = loginService.idByCode(user.getUsername());
-        //mav.addObject("loginUserDto", userId);
+
+        //유저코드로 유저아이디 가져오기
+        mav.addObject("signDto", loginService.infoByCode(userCode));
         return mav;
     }
 
@@ -47,8 +50,12 @@ public class SignController {
     @PostMapping("/sign-up")
     public ResponseEntity<Integer> signUp(@ModelAttribute SignDto signDto
                                         ,@AuthenticationPrincipal User user
-                                        ){
-        String userCode = user.getUsername();
+                                        ,HttpServletRequest request) throws JsonProcessingException {
+        /*String userCode = user.getUsername();
+        System.out.println("sign-up userCode확인 : "+userCode);
+        */
+        //쿠키에 담긴 토큰으로부터 유저code 가져오기
+        String userCode = tokenProvider.userCodeFromToken(cookieUtil.tokenFromCookie(request));
         signDto.setUserCode(userCode);
         int cnt = loginService.signUpdate(signDto);
         

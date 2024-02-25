@@ -26,8 +26,9 @@
                     user_name LIKE CONCAT('%', #{word}, '%')
                 </if>
             </foreach>
+            AND user_code = #{userCode}
         </where>
-        AND user_code = #{userCode}
+
     </select>
 
     <select id="readClassList" parameterType="PagingVo" resultType="ClassDto">
@@ -76,8 +77,9 @@
                 </if>
             </foreach>
             AND join_status = 'y'
+            AND user_code = #{userCode}
         </where>
-        AND user_code = #{userCode}
+
         GROUP BY c.class_no
         ORDER BY c.frst_wrt_dt DESC
         LIMIT #{rowPerPage} OFFSET #{startRow};
@@ -85,8 +87,8 @@
     </select>
 
     <insert id="createClass" parameterType="ClassDto">
-        <selectKey resultType="long" keyProperty="teacherUserNo" order="BEFORE">
-            SELECT user_no
+        <selectKey resultType="Map" keyColumn="user_no,user_id" keyProperty="teacherUserNo,userId" order="BEFORE">
+            SELECT user_no, user_id
             FROM tb_user
             WHERE user_code = #{userCode}
         </selectKey>
@@ -111,9 +113,9 @@
             , #{classMemberNum}
             , #{classStrtDt}
             , #{classEndDt}
-            , #{classStatus}
-            , #{frstWrtId}
-            , #{lastWrtId}
+            , 'y'
+            , #{userId}
+            , #{userId}
             );
     </insert>
 

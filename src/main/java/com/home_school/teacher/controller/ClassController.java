@@ -39,7 +39,7 @@ public class ClassController {
     @PostMapping(value = "/teacher/classes")
     public ResponseEntity<Integer> createClass(@RequestBody ClassDto classDto
                                             ,@AuthenticationPrincipal User user){
-        //classDto.setUserCode(user.getUsername());
+        classDto.setUserCode(user.getUsername());
         return ResponseEntity.ok(classService.createClass(classDto));
     }
 

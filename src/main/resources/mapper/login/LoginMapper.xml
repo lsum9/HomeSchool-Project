@@ -10,7 +10,8 @@
       WHERE user_code=#{userCode}
   </select>
 
-    <insert id="userInsert" parameterType="SignDto">
+    <insert id="insertUser" parameterType="SignDto" useGeneratedKeys="true"
+            keyProperty="userNo" keyColumn="user_no">
         INSERT INTO
             homeschool.tb_user
             (
@@ -32,11 +33,27 @@
              );
     </insert>
 
-    <select id="idByCode" parameterType="String" resultType="String">
+    <insert id="insertProfile" parameterType="SignDto">
+        INSERT INTO
+        tb_profile
+        (
+        user_no
+         ,profile_name
+        )values
+        (
+         #{userNo}
+         ,#{profileName}
+        )
+    </insert>
+
+    <select id="infoByCode" parameterType="String" resultType="SignDto">
         SELECT
             user_id
+            ,profile_name
         FROM
-            tb_user
+            tb_user u
+        JOIN tb_profile p
+        ON u.user_no = p.user_no
         WHERE
             user_code = #{userCode}
     </select>
@@ -53,7 +70,7 @@
             user_status = 'y'
     </select>
 
-    <update id="signUpdate" parameterType="SignDto">
+    <update id="updateSign" parameterType="SignDto">
         UPDATE
             homeschool.tb_user
         SET
@@ -61,5 +78,4 @@
           , last_wrt_dt=current_timestamp()
         WHERE user_code=#{userCode};
     </update>
-
 </mapper>

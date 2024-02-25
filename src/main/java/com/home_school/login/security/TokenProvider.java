@@ -99,6 +99,11 @@ public class TokenProvider {
         }
     }
 
+    //토큰에서 유저code 가져오기
+    public String userCodeFromToken(String token) throws JsonProcessingException {
+        return decodeJwtPayloadSubject(token).split(":")[0];
+    }
+
     //엑세스 토큰 유효성 검사 -> 토큰에 담긴 정보 리턴
     private Jws<Claims> validateAndParseToken(String token) {
         return Jwts.parserBuilder()
@@ -113,9 +118,5 @@ public class TokenProvider {
                 new String(Base64.getDecoder().decode(oldAccessToken.split("\\.")[1]), StandardCharsets.UTF_8),
                 Map.class
         ).get("sub").toString();
-    }
-
-    public String userCodeFromToken(String token) throws JsonProcessingException {
-        return decodeJwtPayloadSubject(token).split(":")[0];
     }
 }

@@ -1,13 +1,16 @@
 package com.home_school.login.service;
 
+import com.home_school.login.dto.LoginUserDto;
 import com.home_school.login.dto.TokenDto;
 import com.home_school.login.dto.SignDto;
 import com.home_school.login.mapper.LoginMapper;
 import com.home_school.login.mapper.RefreshTokenMapper;
 import com.home_school.login.security.TokenProvider;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +19,7 @@ import java.util.Objects;
 @Log4j2
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LoginService {
     private final LoginMapper loginMapper;
     private final TokenProvider tokenProvider;
@@ -31,17 +35,34 @@ public class LoginService {
         
         //가입여부 및 유저유형 확인
         SignDto selectUser = loginMapper.selectUser(signDto.getUserCode());
-        if(!Objects.equals(selectUser.getUserType(), "USER")){
+        if(selectUser == null){
+            //미가입자라면 회원가입
+            loginMapper.insertUser(signDto);
+            loginMapper.insertProfile(signDto);
+            //미가입자라면 회원가입 폼으로 이동 url 세팅
+            signMap.put("url", "/sign-up-form");
+
+            selectUser = loginMapper.selectUser(signDto.getUserCode());
+        }else{
+            if(!Objects.equals(selectUser.getUserType(), "USER")){
+                signMap.put("url", "/main");
+            } else if (selectUser.getUserType().equals("USER")) {
+                //임시가입자라면 회원가입 폼으로 이동 url 세팅
+                signMap.put("url", "/sign-up-form");
+            }
+        }
+        /*if(!Objects.equals(selectUser.getUserType(), "USER")){
             signMap.put("url", "/main");
         } else if (selectUser.getUserType().equals("USER")) {
             //임시가입자라면 회원가입 폼으로 이동 url 세팅
             signMap.put("url", "/sign-up-form");
         }else{
             //미가입자라면 회원가입
-            loginMapper.userInsert(signDto);
+            loginMapper.insertUser(signDto);
+            loginMapper.insertProfile(signDto);
             //미가입자라면 회원가입 폼으로 이동 url 세팅
             signMap.put("url", "/sign-up-form");
-        }
+        }*/
         //토큰추가
         signMap.put("token", tokenMake(selectUser));
         return signMap;
@@ -70,13 +91,13 @@ public class LoginService {
     }
 
     //추가정보입력창 가입아이디 노출
-    public String idByCode(String userCode){
-        return loginMapper.idByCode(userCode);
+    public SignDto infoByCode(String userCode){
+        return loginMapper.infoByCode(userCode);
     }
 
     //추가정보 입력하여 최종 가입절차 진행
     public int signUpdate(SignDto signDto){
-        return loginMapper.signUpdate(signDto);
+        return loginMapper.updateSign(signDto);
     }
     
 }

@@ -214,7 +214,6 @@
         WHERE
             exam_question_no=#{examQuestionNo};
         </foreach>
-
     </update>
 
     <delete id="deleteExamQuestion" parameterType="Long">

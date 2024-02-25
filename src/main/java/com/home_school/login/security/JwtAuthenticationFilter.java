@@ -74,6 +74,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             authenticated.setDetails(new WebAuthenticationDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticated);
             response.setHeader("New-Access-Token", newAccessToken);
+            System.out.println("재발급 엑세스토큰 : "+newAccessToken);
         } catch (Exception e) {
             request.setAttribute("exception", e);
         }

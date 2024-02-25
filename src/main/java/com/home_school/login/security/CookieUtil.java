@@ -1,6 +1,7 @@
 package com.home_school.login.security;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -27,5 +28,22 @@ public class CookieUtil {
         cookie.setPath("/"); // 쿠키의 경로 설정
 
         response.addCookie(cookie);
+    }
+
+    public String tokenFromCookie(HttpServletRequest request){
+        String token = null;
+        Cookie[] cookies=request.getCookies(); // 모든 쿠키 가져오기
+        if(cookies!=null){
+            for (Cookie c : cookies) {
+                String name = c.getName(); // 쿠키 이름 가져오기
+                String value = c.getValue(); // 쿠키 값 가져오기
+                if(name.equals("jwt-token")){
+                    token=value;
+                }else{
+                    throw new RuntimeException("발급된 jwt토큰 없음");
+                }
+            }
+        }
+        return token;
     }
 }

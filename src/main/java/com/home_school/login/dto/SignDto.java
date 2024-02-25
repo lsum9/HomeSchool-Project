@@ -9,11 +9,11 @@ public class SignDto {
     private String userType;
     //private String token;
     //private String refreshToken;
-    private String userName;
+    private String profileName;
     //private String userEmail;
     private String profileText;
 
-    //private Long userNo;
+    private Long userNo;
     //private String userStatus;
     private String userCode;
     //private String sub;

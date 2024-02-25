@@ -8,7 +8,7 @@
             COUNT(lecture_no)
         FROM homeschool.tb_lecture
         <where>
-            <if test="key == 'lectureTitle'">
+            <if test="key == 'lectureTitle'" >
                 lecture_title LIKE CONCAT('%', #{word}, '%')
             </if>
         </where>

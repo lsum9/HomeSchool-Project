@@ -107,7 +107,7 @@ public class GoogleLoginController {
 
         SignDto signDto = new SignDto();
         signDto.setUserCode(googleTokenResponse.getSub());
-        signDto.setUserName(googleTokenResponse.getName());
+        signDto.setProfileName(googleTokenResponse.getName());
         signDto.setUserId(googleTokenResponse.getEmail());
 
         //가입여부에 따른 처리 결과 signMap
