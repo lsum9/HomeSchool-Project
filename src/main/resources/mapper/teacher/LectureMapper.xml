@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.home_school.teacher.mapper.LectureMapper">
+    <select id="lectureCnt" parameterType="PagingVo" resultType="int">
+        SELECT
+            COUNT(lecture_no)
+        FROM homeschool.tb_lecture
+        <where>
+            <if test="key == 'lectureTitle'">
+                lecture_title LIKE CONCAT('%', #{word}, '%')
+            </if>
+        </where>
+        AND user_code = #{userCode}
+    </select>
+
+    <select id="readLectureList" parameterType="PagingVo" resultType="LectureDto">
+        SELECT
+            lecture_no
+            ,lecture_title
+            ,lecture_file
+            ,frst_wrt_dt
+            ,last_wrt_dt
+        FROM
+            homeschool.tb_lecture
+        <where>
+            <if test="key == 'lectureTitle'">
+                lecture_title LIKE CONCAT('%', #{word}, '%')
+            </if>
+        </where>
+        AND lecture_no = #{lectureNo}
+        ORDER BY frst_wrt_dt DESC
+        LIMIT #{rowPerPage} OFFSET #{startRow};
+
+    </select>
+
+    <insert id="createLecture" parameterType="LectureDto">
+        <selectKey resultType="long" keyProperty="teacherUserNo" order="BEFORE">
+            SELECT user_no
+            FROM tb_user
+            WHERE user_code = #{userCode}
+        </selectKey>
+            INSERT INTO
+            homeschool.tb_lecture
+            (
+            class_no
+            , lecture_title
+            , lecture_file
+            , lecture_status
+            , frst_wrt_id
+            , last_wrt_id
+            )
+            VALUES
+            (
+            #{classNo}
+            ,#{lectureTitle}
+            ,#{lectureFile}
+            , 'y'
+            , #{teacherUserNo}
+            , #{teacherUserNo}
+            );
+    </insert>
+
+    <delete id="deleteLecture" parameterType="Long">
+        DELETE FROM homeschool.tb_lecture
+        WHERE lecture_no=#{lectureNo};
+    </delete>
+
+    <update id="updateLecture" parameterType="LectureDto">
+        UPDATE
+            homeschool.tb_lecture
+        SET
+            lecture_title=#{lectureTitle}
+          , lecture_file=#{lectureFile}
+          , lecture_status=#{lectureStatus}
+          , last_wrt_dt=current_timestamp()
+        WHERE lecture_no=#{lectureNo};
+    </update>
+
+</mapper>
